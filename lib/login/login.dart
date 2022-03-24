@@ -5,20 +5,29 @@ import 'package:telkom_apps/login/components/head.dart';
 import 'package:telkom_apps/login/components/form.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  const LoginPage({
+    Key? key,
+  }) : super(key: key);
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   TextEditingController username = new TextEditingController();
   TextEditingController password = new TextEditingController();
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Color(0xFFFF4949), //or set color with: Color(0xFF0000FF)
+    ));
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Column(
-          children: <Widget>[
-            Head(),
-            FormPage()
-          ],
+          children: <Widget>[Head(), FormPage()],
         ));
   }
 

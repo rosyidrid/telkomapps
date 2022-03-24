@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 
-class FormPage extends StatelessWidget {
-  const FormPage({Key? key}) : super(key: key);
+class FormPage extends StatefulWidget {
+  const FormPage({
+    Key? key,
+  }) : super(key: key);
+  @override
+  State<FormPage> createState() => _FormPageState();
+}
 
+class _FormPageState extends State<FormPage> {
+  bool pass = true;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -14,7 +21,8 @@ class FormPage extends StatelessWidget {
           children: <Widget>[
             Container(
               width: size.width * 0.8,
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              height: size.height * 0.15,
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -27,6 +35,7 @@ class FormPage extends StatelessWidget {
                 ],
               ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   TextField(
                     decoration: InputDecoration(
@@ -39,13 +48,28 @@ class FormPage extends StatelessWidget {
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(
                         vertical: 10,
-                        horizontal: 20,
+                        horizontal: 5,
                       ),
                     ),
                   ),
+                  Divider(
+                    color: Colors.grey,
+                    height: 5,
+                    thickness: 1,
+                    indent: 5,
+                    endIndent: 10,
+                  ),
                   TextField(
+                    obscureText: pass,
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
+                      suffixIcon: InkWell(
+                          onTap: () {
+                            setState(() {
+                              pass = !pass;
+                            });
+                          },
+                          child: Icon(pass == true? Icons.visibility_off : Icons.visibility)),
                       hintText: "Password",
                       hintStyle: TextStyle(
                         color: Colors.grey,
@@ -54,7 +78,7 @@ class FormPage extends StatelessWidget {
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(
                         vertical: 10,
-                        horizontal: 20,
+                        horizontal: 5,
                       ),
                     ),
                   ),
@@ -62,7 +86,13 @@ class FormPage extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                // Navigator.of(context).pushReplacement(
+                //   MaterialPageRoute(builder: (_) {
+                //     // return Dashboard();
+                //   }),
+                // );
+              },
               child: Text(
                 "LOGIN",
                 style: TextStyle(
@@ -71,9 +101,9 @@ class FormPage extends StatelessWidget {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(size.width * 0.8, 40),
-                primary: Color(0xFFFF4949),
-                textStyle: TextStyle(fontWeight: FontWeight.w700)),
+                  minimumSize: Size(size.width * 0.8, 40),
+                  primary: Color(0xFFFF4949),
+                  textStyle: TextStyle(fontWeight: FontWeight.w700)),
             ),
           ],
         ));

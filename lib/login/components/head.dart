@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class Head extends StatelessWidget {
-  const Head({
-    Key? key,
-  }) : super(key: key);
+class Head extends StatefulWidget {
+  const Head({Key? key,}) : super(key: key);
+  @override
+  State<Head> createState() => _HeadState();
+}
+class _HeadState extends State<Head> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -20,7 +22,9 @@ class Head extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 50,),
+            margin: EdgeInsets.only(
+              top: 50,
+            ),
             child: Text(
               "SELAMAT DATANG",
               style: TextStyle(
