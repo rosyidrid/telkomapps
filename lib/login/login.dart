@@ -1,34 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:telkom_apps/API/api.dart';
 import 'package:telkom_apps/home.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:telkom_apps/login/components/head.dart';
+import 'package:telkom_apps/login/components/form.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
-
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
+class LoginPage extends StatelessWidget {
   TextEditingController username = new TextEditingController();
   TextEditingController password = new TextEditingController();
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: Column(
+        resizeToAvoidBottomInset: false,
+        body: Column(
           children: <Widget>[
-            Container(
-              
-            )
+            Head(),
+            FormPage()
           ],
-        ),
-      ),
-    );
+        ));
   }
 
   Future _doLogin(BuildContext context) async {
@@ -42,7 +33,8 @@ class _LoginPageState extends State<LoginPage> {
     var resLogin = await CallAPI().postData(userLogin, 'login');
     var bodyLogin = json.decode(resLogin.body);
     //cek apakah login berhasil
-    if (resLogin.statusCode == 200) { //jika iya maka 
+    if (resLogin.statusCode == 200) {
+      //jika iya maka
       //data akan di username dan token akan di simpan di localstorage
       SharedPreferences localStorage = await SharedPreferences.getInstance();
       localStorage.setString('username', bodyLogin['data']['name']);
@@ -54,7 +46,8 @@ class _LoginPageState extends State<LoginPage> {
           return Home();
         }),
       );
-    } else {//jika gagal
+    } else {
+      //jika gagal
       //akan memuncul kan pop up message
       var message = bodyLogin['message'];
       Widget okButton = TextButton(
