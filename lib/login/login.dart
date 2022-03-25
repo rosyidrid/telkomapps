@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color(0xFFFF4949), //or set color with: Color(0xFF0000FF)
+      statusBarColor: Color(0xFFFF4949),
     ));
     Size size = MediaQuery.of(context).size;
     return Scaffold(

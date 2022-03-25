@@ -33,9 +33,11 @@ class _HeadState extends State<Head> {
                   fontWeight: FontWeight.w700),
             ),
           ),
-          SvgPicture.asset(
-            "assets/image/svg/head.svg",
-          )
+          Container(
+            height: size.height * 0.3,
+            child: SvgPicture.asset(
+            "assets/image/svg/head.svg"
+          ),)
         ],
       ),
     );

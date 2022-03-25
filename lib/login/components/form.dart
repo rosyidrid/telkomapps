@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telkom_apps/outlet/outlet.dart';
 
 class FormPage extends StatefulWidget {
   const FormPage({
@@ -21,7 +22,7 @@ class _FormPageState extends State<FormPage> {
           children: <Widget>[
             Container(
               width: size.width * 0.8,
-              height: size.height * 0.15,
+              height: size.height * 0.2,
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -69,7 +70,9 @@ class _FormPageState extends State<FormPage> {
                               pass = !pass;
                             });
                           },
-                          child: Icon(pass == true? Icons.visibility_off : Icons.visibility)),
+                          child: Icon(pass == true
+                              ? Icons.visibility_off
+                              : Icons.visibility)),
                       hintText: "Password",
                       hintStyle: TextStyle(
                         color: Colors.grey,
@@ -87,17 +90,17 @@ class _FormPageState extends State<FormPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                // Navigator.of(context).pushReplacement(
-                //   MaterialPageRoute(builder: (_) {
-                //     // return Dashboard();
-                //   }),
-                // );
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) {
+                    return OutletPage();
+                  }),
+                );
               },
               child: Text(
                 "LOGIN",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
               style: ElevatedButton.styleFrom(

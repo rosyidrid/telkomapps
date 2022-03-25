@@ -36,6 +36,7 @@ dependencies:
   flutter_login: ^2.2.1
   flutter_svg: ^1.0.3
   flutter_svg_provider: ^1.0.3
+  flutter_image_slideshow: any
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:telkom_apps/login/login.dart';
 import 'dart:async';
+import 'package:flutter/services.dart';
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({Key? key}) : super(key: key);
@@ -29,6 +30,9 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Colors.white, //or set color with: Color(0xFF0000FF)
+    ));
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
