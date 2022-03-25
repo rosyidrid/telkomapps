@@ -21,14 +21,14 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color(0xFFFF4949),
+      statusBarColor: Colors.transparent,
     ));
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Column(
-          children: <Widget>[Head(), FormPage()],
-        ));
+        body: SingleChildScrollView(
+            child: Column(
+      children: <Widget>[Head(), FormPage()],
+    )));
   }
 
   Future _doLogin(BuildContext context) async {

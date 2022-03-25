@@ -4,8 +4,7 @@ import 'package:telkom_apps/login/login.dart';
 import 'dart:convert';
 import 'API/api.dart';
 
-class Home extends StatelessWidget{
-
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,18 +34,21 @@ class Home extends StatelessWidget{
   Future _doLogout(BuildContext context) async {
     //ambil fungsi sharePreferences
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var tokenUser = localStorage.getString('token');//ambil token dari localstorage
-    var resUser = await CallAPI().getDataUser(tokenUser, 'logout');//panggil function REST API logout
+    var tokenUser =
+        localStorage.getString('token'); //ambil token dari localstorage
+    var resUser = await CallAPI()
+        .getDataUser(tokenUser, 'logout'); //panggil function REST API logout
     var bodyUser = json.decode(resUser.body);
     //pengecekan apakah token berhasil di hapus dari database
-    if (bodyUser['success'] == true) { //jika iya maka
+    if (bodyUser['success'] == true) {
+      //jika iya maka
       //page beralih ke halaman login
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) {
           return LoginPage();
         }),
       );
-    }else{
+    } else {
       //jika tidak maka muncul pop up gagal log out
       var message = "Logout Gagal";
       Widget okButton = TextButton(

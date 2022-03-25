@@ -10,10 +10,16 @@ class Performansi extends StatefulWidget {
 class _PerformansiState extends State<Performansi> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
       padding: EdgeInsets.all(10),
-      child: Text("PERFORMANSI",
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text("PERFORMANSI",
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18)),
+        ],
+      ),
     );
   }
 }

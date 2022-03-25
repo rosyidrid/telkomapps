@@ -11,13 +11,12 @@ class _DetailsState extends State<Details> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SingleChildScrollView(
-        child: Container(
+    return Container(
       decoration: BoxDecoration(
           border:
               Border(bottom: BorderSide(width: 5, color: Color(0xFFE5E5E5)))),
       width: size.width,
-      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -53,6 +52,6 @@ class _DetailsState extends State<Details> {
           )
         ],
       ),
-    ));
+    );
   }
 }
