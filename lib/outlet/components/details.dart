@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telkom_apps/task/checkin_task.dart';
 
 class Details extends StatefulWidget {
   const Details({Key? key}) : super(key: key);
@@ -41,7 +42,13 @@ class _DetailsState extends State<Details> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             borderSide: BorderSide(color: Color(0xFFFF4949)),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) {
+                  return TaskPage();
+                }),
+              );
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
