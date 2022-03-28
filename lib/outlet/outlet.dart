@@ -29,6 +29,7 @@ class _OutletPageState extends State<OutletPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home, color: Colors.white),
             label: 'Home',
+            
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person, color: Colors.white),

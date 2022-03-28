@@ -53,7 +53,7 @@ class _DetailsState extends State<Details> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text("Check-In "),
-                Icon(Icons.input),
+                Icon(Icons.login),
               ],
             ),
           )
