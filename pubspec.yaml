@@ -38,6 +38,7 @@ dependencies:
   flutter_svg_provider: ^1.0.3
   flutter_image_slideshow: any
   splashscreen: ^1.3.5
+  google_maps_flutter: ^2.1.3
 
 dev_dependencies:
   flutter_test:

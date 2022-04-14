@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telkom_apps/map/map.dart';
 
 class Tasks extends StatefulWidget {
   const Tasks({
@@ -42,6 +43,7 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(20),
       child: Column(
@@ -51,6 +53,104 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
               begin: levelClock,
               end: 0,
             ).animate(_controller),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) {
+                  return MapPage();
+                }),
+              );
+            },
+            child: Text(
+              "Check - In Posisi",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+                minimumSize: Size(size.width * 0.8, 50),
+                primary: Color(0xFFFF4949),
+                textStyle: TextStyle(fontWeight: FontWeight.w700)),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text(
+              "Ambil Foto di Outlet",
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 14,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+                minimumSize: Size(size.width * 0.8, 50),
+                primary: Colors.grey[350],
+                textStyle: TextStyle(fontWeight: FontWeight.w700)),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text(
+              "Ambil Foto Stok Digipos",
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 14,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+                minimumSize: Size(size.width * 0.8, 50),
+                primary: Colors.grey[350],
+                textStyle: TextStyle(fontWeight: FontWeight.w700)),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text(
+              "Ambil Foto Nota Penjualan",
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 14,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+                minimumSize: Size(size.width * 0.8, 50),
+                primary: Colors.grey[350],
+                textStyle: TextStyle(fontWeight: FontWeight.w700)),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text(
+              "Ambil Foto Promo Comp",
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 14,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+                minimumSize: Size(size.width * 0.8, 50),
+                primary: Colors.grey[350],
+                textStyle: TextStyle(fontWeight: FontWeight.w700)),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text(
+              "Ambil Foto Harga EUP",
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 14,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+                minimumSize: Size(size.width * 0.8, 50),
+                primary: Colors.grey[350],
+                textStyle: TextStyle(fontWeight: FontWeight.w700)),
           ),
         ],
       ),
