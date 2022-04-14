@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:telkom_apps/outlet/outlet.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -85,13 +84,7 @@ class _SearchState extends State<Search> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (_) {
-                      return OutletPage();
-                    }),
-                  );
-                },
+                onPressed: () {},
                 child: Text(
                   "Search",
                   style: TextStyle(

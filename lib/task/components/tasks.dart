@@ -13,7 +13,7 @@ class Tasks extends StatefulWidget {
 class _TasksState extends State<Tasks> with TickerProviderStateMixin {
   int _counter = 0;
   late AnimationController _controller;
-  int levelClock = 1200;
+  int levelClock = 0;
 
   void _incrementCounter() {
     setState(() {

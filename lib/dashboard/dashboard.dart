@@ -34,7 +34,6 @@ class _DashboardState extends State<Dashboard> {
           ),
           Text("Hasil Pencarian : ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           Container(
-            margin: EdgeInsets.only(top: 20),
             child: ListViewPage(),
           )
         ],
