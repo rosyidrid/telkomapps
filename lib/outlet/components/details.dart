@@ -43,10 +43,11 @@ class _DetailsState extends State<Details> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             borderSide: BorderSide(color: Color(0xFFFF4949)),
             onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) {
-                  return TaskPage();
-                }),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TaskPage()
+                ),
               );
             },
             child: Row(

@@ -17,11 +17,8 @@ class _ListViewPageState extends State<ListViewPage> {
         padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
         child: ElevatedButton(
           onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) {
-                return OutletPage();
-              }),
-            );
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => OutletPage()));
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

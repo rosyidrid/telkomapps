@@ -59,11 +59,8 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) {
-                  return MapPage();
-                }),
-              );
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MapPage()));
             },
             child: Text(
               "Check - In Posisi",

@@ -19,24 +19,6 @@ class _OutletPageState extends State<OutletPage> {
           children: <Widget>[SlideImage(), Details(), Performansi()],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFFFF4949),
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map, color: Colors.white),
-            label: 'Map',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.white),
-            label: 'Home',
-            
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: 'Profile',
-          ),
-        ],
-      ),
     );
   }
 }

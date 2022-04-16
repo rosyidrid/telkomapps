@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:telkom_apps/map/components/maps.dart';
-import 'package:telkom_apps/task/checkin_task.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -15,16 +14,6 @@ class _MapPageState extends State<MapPage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) {
-                return TaskPage();
-              }),
-            );
-          },
-        ),
         backgroundColor: Color(0xFFFF4949),
         title: Text(
           'Lihat Peta',
