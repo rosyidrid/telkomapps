@@ -14,9 +14,14 @@ class _OutletPageState extends State<OutletPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Detail Outlet'),
+        backgroundColor: Color(0xFFFF4949),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
-          children: <Widget>[SlideImage(), Details(), Performansi()],
+          children: <Widget>[Details(), Performansi()],
         ),
       ),
     );

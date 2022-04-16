@@ -17,8 +17,8 @@ class _MapPageState extends State<MapPage> {
         backgroundColor: Color(0xFFFF4949),
         title: Text(
           'Lihat Peta',
-          textAlign: TextAlign.center,
         ),
+        centerTitle: true,
       ),
       body: Column(
         children: <Widget>[

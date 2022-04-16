@@ -23,13 +23,13 @@ class _HeadState extends State<Head> {
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(
-              top: 50,
+              top: 80,
             ),
             child: Text(
-              "SELAMAT DATANG",
+              "Selamat Datang",
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 26,
+                  fontSize: 24,
                   fontWeight: FontWeight.w700),
             ),
           ),

@@ -16,6 +16,7 @@ class _TaskPageState extends State<TaskPage> {
         appBar: AppBar(
           backgroundColor: Color(0xFFFF4949),
           title: Text('Kerjakan Kegiatan Berikut!'),
+          centerTitle: true,
         ),
         body: SingleChildScrollView(
             child: Container(

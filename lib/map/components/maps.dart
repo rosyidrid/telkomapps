@@ -17,7 +17,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return GoogleMap(
       myLocationButtonEnabled: false,
-      zoomControlsEnabled: false,
+      zoomControlsEnabled: true,
       initialCameraPosition: _initialCameraPosition,
       liteModeEnabled: true,
     );
