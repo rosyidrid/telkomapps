@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:telkom_apps/dashboard/dashboard.dart';
-import 'package:telkom_apps/outlet/outlet.dart';
+import 'package:telkom_apps/API/api.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FormPage extends StatefulWidget {
   const FormPage({
@@ -11,6 +13,8 @@ class FormPage extends StatefulWidget {
 }
 
 class _FormPageState extends State<FormPage> {
+  TextEditingController username = new TextEditingController();
+  TextEditingController password = new TextEditingController();
   bool pass = true;
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,8 @@ class _FormPageState extends State<FormPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  TextField(
+                  TextFormField(
+                    controller: username,
                     decoration: InputDecoration(
                       icon: Icon(Icons.person),
                       hintText: "Username",
@@ -60,7 +65,8 @@ class _FormPageState extends State<FormPage> {
                     indent: 5,
                     endIndent: 10,
                   ),
-                  TextField(
+                  TextFormField(
+                    controller: password,
                     obscureText: pass,
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
@@ -90,11 +96,7 @@ class _FormPageState extends State<FormPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) {
-                    return Dashboard();
-                  }),
-                );
+                _doLogin();
               },
               child: Text(
                 "LOGIN",
@@ -110,5 +112,56 @@ class _FormPageState extends State<FormPage> {
             ),
           ],
         ));
+  }
+
+  Future<void> _doLogin() async {
+    // var[array] data
+    var userLogin = {
+      'username': username.text,
+      'password': password.text,
+      'device_name': "Android",
+    };
+
+    final localStorage = await SharedPreferences.getInstance();
+    var resLogin = await CallAPI().postData(userLogin, 'login');
+    var bodyLogin = json.decode(resLogin.body);
+    //cek apakah login berhasil
+    if (resLogin.statusCode == 200) {
+      //jika iya maka
+      //data akan di username dan token akan di simpan di localstorage
+      // localStorage.setString('username', bodyLogin['data']['name']);
+      localStorage.setString('token', bodyLogin['data']['token']);
+      //setelah di simpen di localstorage
+      //page berganti kehalaman home
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) {
+          return Dashboard();
+        }),
+      );
+    } else {
+      //jika gagal
+      //akan memuncul kan pop up message
+      var message = bodyLogin['message'];
+      Widget okButton = TextButton(
+        child: Text("Close"),
+        onPressed: () {
+          Navigator.pop(context, false);
+        },
+      );
+
+      AlertDialog alert = AlertDialog(
+        title: Text("Error Login"),
+        content: Text("$message"),
+        actions: [
+          okButton,
+        ],
+      );
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
+    }
   }
 }

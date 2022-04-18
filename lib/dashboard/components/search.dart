@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:telkom_apps/login/login.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -84,7 +86,9 @@ class _SearchState extends State<Search> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  logOut();
+                },
                 child: Text(
                   "Search",
                   style: TextStyle(
@@ -101,6 +105,16 @@ class _SearchState extends State<Search> {
           ),
         )
       ],
+    );
+  }
+
+  Future<void> logOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("token");
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) {
+        return LoginPage();
+      }),
     );
   }
 }

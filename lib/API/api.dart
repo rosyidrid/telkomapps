@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CallAPI {
-  final String url = 'http://192.168.100.2:8000/api/';
+  final String url = 'http://testdev.playbooksf.com/api/';
   postData(data, apiURL) async {
     var fullUrl = url + apiURL;
     return await http.post(Uri.parse(fullUrl),

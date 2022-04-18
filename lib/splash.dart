@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:telkom_apps/dashboard/dashboard.dart';
 import 'package:telkom_apps/login/login.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({Key? key}) : super(key: key);
@@ -17,14 +19,29 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     startSplashScreen();
   }
 
-  startSplashScreen() async {
-    var duration = const Duration(seconds: 3);
-    return Timer(duration, () {
+  Future<void> autoLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.get('token');
+    print(token);
+    if (token != null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) {
+          return Dashboard();
+        }),
+      );
+    } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) {
           return LoginPage();
         }),
       );
+    }
+  }
+
+  startSplashScreen() async {
+    var duration = const Duration(seconds: 3);
+    return Timer(duration, () {
+      autoLogin();
     });
   }
 
