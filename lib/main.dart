@@ -3,7 +3,7 @@ import 'package:telkom_apps/splash.dart';
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'PlayBook Sales Force',
+      title: 'PlayBook Sales Forc',
       theme: ThemeData(
         fontFamily: "Poppins",
       ),
