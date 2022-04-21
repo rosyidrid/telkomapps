@@ -25,16 +25,17 @@ class _FormPageState extends State<FormPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
+        
             Container(
               width: size.width * 0.8,
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
-                    blurRadius: 6,
+                    blurRadius: 3,
                     offset: Offset(1, 1),
                   )
                 ],
@@ -53,7 +54,7 @@ class _FormPageState extends State<FormPage> {
                       ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(
-                        vertical: 10,
+                        vertical: 15,
                         horizontal: 5,
                       ),
                     ),
@@ -86,7 +87,7 @@ class _FormPageState extends State<FormPage> {
                       ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(
-                        vertical: 10,
+                        vertical: 15,
                         horizontal: 5,
                       ),
                     ),
