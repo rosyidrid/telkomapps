@@ -18,25 +18,29 @@ class _SearchState extends State<Search> {
     return Column(
       children: <Widget>[
         Container(
-          width: size.width * .8,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(Icons.account_circle_rounded, color: Colors.white, size: 60),
-              Flexible(
-                  child: FutureBuilder(
-                      future: getUser(),
-                      builder: (context,
-                          AsyncSnapshot<Map<String, dynamic>> snapshot) {
-                        return Text("${snapshot.data?['name']}",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500));
-                      }))
-            ],
-          ),
-        ),
+            width: size.width * .8,
+            child: FutureBuilder(
+              future: getUser(),
+              builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  );
+                }
+                return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(Icons.account_circle_rounded,
+                          color: Colors.white, size: 60),
+                      Flexible(
+                          child: Text("${snapshot.data?['name']}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500)))
+                    ]);
+              },
+            )),
         Container(
           margin: EdgeInsets.only(top: 20, bottom: 20),
           width: size.width * .8,

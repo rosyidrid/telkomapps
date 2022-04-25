@@ -16,6 +16,7 @@ class _FormPageState extends State<FormPage> {
   TextEditingController username = new TextEditingController();
   TextEditingController password = new TextEditingController();
   bool pass = true;
+  
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -122,15 +123,18 @@ class _FormPageState extends State<FormPage> {
       'device_name': "Android",
     };
 
-    final localStorage = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     var resLogin = await CallAPI().postData(userLogin, 'login');
     var bodyLogin = json.decode(resLogin.body);
     //cek apakah login berhasil
     if (resLogin.statusCode == 200) {
       //jika iya maka
-      //data akan di username dan token akan di simpan di localstorage
-      // localStorage.setString('username', bodyLogin['data']['name']);
-      localStorage.setString('token', bodyLogin['data']['token']);
+      //data username dan token akan di simpan di localstorage
+      prefs.setString('token', bodyLogin['data']['token']);
+      var token = prefs.get("token");
+      var dataUser = await CallAPI().getDataUser(token, 'user');
+      var bodyUser = json.decode(dataUser.body);
+      prefs.setString('user', json.encode(bodyUser['data']));
       //setelah di simpen di localstorage
       //page berganti kehalaman home
       Navigator.of(context).pushReplacement(
