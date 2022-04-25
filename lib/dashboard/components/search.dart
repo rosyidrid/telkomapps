@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:telkom_apps/API/api.dart';
 import 'package:telkom_apps/login/login.dart';
+import 'dart:convert';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -10,6 +12,14 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  Future<Map<String, dynamic>> getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.get("token");
+    var dataUser = await CallAPI().getDataUser(token, 'user');
+    var user = json.decode(dataUser.body)["data"] as Map<String, dynamic>;
+    return user;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -22,11 +32,16 @@ class _SearchState extends State<Search> {
             children: <Widget>[
               Icon(Icons.account_circle_rounded, color: Colors.white, size: 60),
               Flexible(
-                  child: Text("SF-Robby Firdauzy-Balikpapan",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500)))
+                  child: FutureBuilder(
+                      future: getUser(),
+                      builder: (context,
+                          AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                        return Text("${snapshot.data?['name']}",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500));
+                      }))
             ],
           ),
         ),
@@ -110,11 +125,15 @@ class _SearchState extends State<Search> {
 
   Future<void> logOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove("token");
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) {
-        return LoginPage();
-      }),
-    );
+    var token = prefs.get("token");
+    var logout = await CallAPI().logout(token, 'logout');
+    if (logout.statusCode == 200) {
+      prefs.remove("token");
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) {
+          return LoginPage();
+        }),
+      );
+    }
   }
 }

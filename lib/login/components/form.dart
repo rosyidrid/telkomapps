@@ -25,7 +25,6 @@ class _FormPageState extends State<FormPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-        
             Container(
               width: size.width * 0.8,
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),

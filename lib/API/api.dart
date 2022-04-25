@@ -22,4 +22,15 @@ class CallAPI {
 
   _setHeadersUser(data) =>
       {'Content-type': 'application/json', 'Authorization': 'Bearer $data'};
+
+  logout(data, apiURL) async {
+    var fullUrl = url + apiURL;
+    return await http.delete(Uri.parse(fullUrl),
+        headers: _setHeaderLogout(data));
+  }
+
+  _setHeaderLogout(data) => {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer $data',
+      };
 }
