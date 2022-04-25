@@ -12,14 +12,6 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  Future<Map<String, dynamic>> getUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.get("token");
-    var dataUser = await CallAPI().getDataUser(token, 'user');
-    var user = json.decode(dataUser.body)["data"] as Map<String, dynamic>;
-    return user;
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -121,6 +113,14 @@ class _SearchState extends State<Search> {
         )
       ],
     );
+  }
+
+  Future<Map<String, dynamic>> getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.get("token");
+    var dataUser = await CallAPI().getDataUser(token, 'user');
+    var user = json.decode(dataUser.body)["data"] as Map<String, dynamic>;
+    return user;
   }
 
   Future<void> logOut() async {
