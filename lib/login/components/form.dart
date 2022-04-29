@@ -16,7 +16,7 @@ class _FormPageState extends State<FormPage> {
   TextEditingController username = new TextEditingController();
   TextEditingController password = new TextEditingController();
   bool pass = true;
-  
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -24,9 +24,22 @@ class _FormPageState extends State<FormPage> {
         width: size.width,
         height: size.height * 0.5,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Container(
+              margin: EdgeInsets.only(top: 10),
+              width: size.width * 0.8,
+              child: Text(
+                "Login",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 26,
+                    color: Color(0xFFFF4949)),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 25),
               width: size.width * 0.8,
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               decoration: BoxDecoration(
@@ -46,7 +59,7 @@ class _FormPageState extends State<FormPage> {
                   TextFormField(
                     controller: username,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.person),
+                      icon: Icon(Icons.person, color: Color(0xFFFF4949)),
                       hintText: "Username",
                       hintStyle: TextStyle(
                         color: Colors.grey,
@@ -70,7 +83,7 @@ class _FormPageState extends State<FormPage> {
                     controller: password,
                     obscureText: pass,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.lock),
+                      icon: Icon(Icons.key, color: Color(0xFFFF4949)),
                       suffixIcon: InkWell(
                           onTap: () {
                             setState(() {
@@ -79,7 +92,8 @@ class _FormPageState extends State<FormPage> {
                           },
                           child: pass == true
                               ? Icon(Icons.visibility_off, color: Colors.grey)
-                              : Icon(Icons.visibility)),
+                              : Icon(Icons.visibility,
+                                  color: Color(0xFFFF4949))),
                       hintText: "Password",
                       hintStyle: TextStyle(
                         color: Colors.grey,
@@ -136,7 +150,7 @@ class _FormPageState extends State<FormPage> {
       var bodyUser = json.decode(dataUser.body);
       prefs.setString('user', json.encode(bodyUser['data']));
       //setelah di simpen di localstorage
-      //page berganti kehalaman home
+      //page berganti kehalaman dashboard
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) {
           return Dashboard();

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:telkom_apps/login/components/head.dart';
 import 'package:telkom_apps/login/components/form.dart';
 import 'package:flutter/services.dart';
-
 class LoginPage extends StatefulWidget {
   const LoginPage({
     Key? key,
@@ -17,11 +16,13 @@ class _LoginPageState extends State<LoginPage> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: Colors.transparent,
     ));
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: SingleChildScrollView(
             child: Column(
-      children: <Widget>[Head(), FormPage()],
+      children: <Widget>[
+        Head(),
+        FormPage()
+      ],
     )));
   }
 }
