@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:telkom_apps/outlet/outlet.dart';
+import 'package:telkom_apps/pages/outlet/outlet.dart';
 
 class ListViewPage extends StatefulWidget {
   const ListViewPage({Key? key}) : super(key: key);

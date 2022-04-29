@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:telkom_apps/outlet/components/details.dart';
-import 'package:telkom_apps/outlet/components/performansi.dart';
+import 'package:telkom_apps/pages/outlet/components/details.dart';
+import 'package:telkom_apps/pages/outlet/components/performansi.dart';
 
 class OutletPage extends StatefulWidget {
   const OutletPage({Key? key}) : super(key: key);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:telkom_apps/task/components/tasks.dart';
+import 'package:telkom_apps/pages/task/components/tasks.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({Key? key}) : super(key: key);

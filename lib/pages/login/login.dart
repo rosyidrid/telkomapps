@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:telkom_apps/login/components/head.dart';
-import 'package:telkom_apps/login/components/form.dart';
+import 'package:telkom_apps/pages/login/components/head.dart';
+import 'package:telkom_apps/pages/login/components/form.dart';
 import 'package:flutter/services.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({

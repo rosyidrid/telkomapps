@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:telkom_apps/map/components/maps.dart';
+import 'package:telkom_apps/pages/map/components/maps.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:telkom_apps/dashboard/components/listview.dart';
-import 'package:telkom_apps/dashboard/components/search.dart';
+import 'package:telkom_apps/pages/dashboard/components/listview.dart';
+import 'package:telkom_apps/pages/dashboard/components/search.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);

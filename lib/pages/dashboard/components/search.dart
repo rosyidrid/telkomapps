@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
-import 'package:telkom_apps/login/login.dart';
+import 'package:telkom_apps/pages/login/login.dart';
 import 'dart:convert';
 
 class Search extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:telkom_apps/dashboard/dashboard.dart';
-import 'package:telkom_apps/login/login.dart';
+import 'package:telkom_apps/pages/dashboard/dashboard.dart';
+import 'package:telkom_apps/pages/login/login.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,6 +26,9 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Colors.transparent,
+    ));
     return SplashScreen(
       navigateAfterSeconds: FutureBuilder(
         future: doLogin(),

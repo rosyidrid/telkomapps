@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:telkom_apps/task/checkin_task.dart';
+import 'package:telkom_apps/pages/task/checkin_task.dart';
 
 class Details extends StatefulWidget {
   const Details({Key? key}) : super(key: key);

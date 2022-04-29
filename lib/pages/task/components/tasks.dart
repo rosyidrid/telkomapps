@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:telkom_apps/map/map.dart';
+import 'package:telkom_apps/pages/map/map.dart';
 
 class Tasks extends StatefulWidget {
   const Tasks({

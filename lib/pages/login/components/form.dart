@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:telkom_apps/dashboard/dashboard.dart';
+import 'package:telkom_apps/pages/dashboard/dashboard.dart';
 import 'package:telkom_apps/API/api.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,60 +53,62 @@ class _FormPageState extends State<FormPage> {
                   )
                 ],
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  TextFormField(
-                    controller: username,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.person, color: Color(0xFFFF4949)),
-                      hintText: "Username",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 5,
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    color: Colors.grey,
-                    height: 5,
-                    thickness: 1,
-                    indent: 5,
-                    endIndent: 10,
-                  ),
-                  TextFormField(
-                    controller: password,
-                    obscureText: pass,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.key, color: Color(0xFFFF4949)),
-                      suffixIcon: InkWell(
-                          onTap: () {
-                            setState(() {
-                              pass = !pass;
-                            });
-                          },
-                          child: pass == true
-                              ? Icon(Icons.visibility_off, color: Colors.grey)
-                              : Icon(Icons.visibility,
-                                  color: Color(0xFFFF4949))),
-                      hintText: "Password",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 5,
+              child: Form(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    TextField(
+                      controller: username,
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.person, color: Color(0xFFFF4949)),
+                        hintText: "Username",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 5,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    Divider(
+                      color: Colors.grey,
+                      height: 5,
+                      thickness: 1,
+                      indent: 5,
+                      endIndent: 10,
+                    ),
+                    TextField(
+                      controller: password,
+                      obscureText: pass,
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.key, color: Color(0xFFFF4949)),
+                        suffixIcon: InkWell(
+                            onTap: () {
+                              setState(() {
+                                pass = !pass;
+                              });
+                            },
+                            child: pass == true
+                                ? Icon(Icons.visibility_off, color: Colors.grey)
+                                : Icon(Icons.visibility,
+                                    color: Color(0xFFFF4949))),
+                        hintText: "Password",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             ElevatedButton(
