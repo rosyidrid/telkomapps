@@ -3,14 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:telkom_apps/pages/dashboard/components/listview.dart';
 import 'package:telkom_apps/pages/dashboard/components/search.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+class DashboardPage extends StatefulWidget {
+  const DashboardPage({Key? key}) : super(key: key);
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  State<DashboardPage> createState() => _DashboardPageState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

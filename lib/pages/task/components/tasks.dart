@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:telkom_apps/pages/map/map.dart';
+import 'package:telkom_apps/pages/photo/photo.dart';
 
 class Tasks extends StatefulWidget {
   const Tasks({
@@ -76,7 +77,10 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => PhotoPage()));
+            },
             child: Text(
               "Ambil Foto di Outlet",
               style: TextStyle(
@@ -91,7 +95,10 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => PhotoPage()));
+            },
             child: Text(
               "Ambil Foto Stok Digipos",
               style: TextStyle(
@@ -106,7 +113,10 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => PhotoPage()));
+            },
             child: Text(
               "Ambil Foto Nota Penjualan",
               style: TextStyle(
@@ -121,7 +131,10 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => PhotoPage()));
+            },
             child: Text(
               "Ambil Foto Promo Comp",
               style: TextStyle(
@@ -136,7 +149,10 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => PhotoPage()));
+            },
             child: Text(
               "Ambil Foto Harga EUP",
               style: TextStyle(

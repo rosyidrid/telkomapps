@@ -131,7 +131,7 @@ class _FormPageState extends State<FormPage> {
         ));
   }
 
-  Future<void> _doLogin() async {
+  Future _doLogin() async {
     // var[array] data
     var userLogin = {
       'username': username.text,
@@ -155,7 +155,7 @@ class _FormPageState extends State<FormPage> {
       //page berganti kehalaman dashboard
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) {
-          return Dashboard();
+          return DashboardPage();
         }),
       );
     } else {

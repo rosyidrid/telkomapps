@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telkom_apps/API/api.dart';
 import 'package:telkom_apps/pages/dashboard/dashboard.dart';
 import 'package:telkom_apps/pages/login/login.dart';
 import 'dart:async';
@@ -34,7 +35,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
         future: doLogin(),
         builder: (context, snapshot) {
           if (snapshot.data == true) {
-            return Dashboard();
+            return DashboardPage();
           } else {
             return LoginPage();
           }
