@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 class PhotoPage extends StatelessWidget {
   const PhotoPage({Key? key}) : super(key: key);
@@ -17,19 +15,23 @@ class PhotoPage extends StatelessWidget {
         body: Container(
           width: size.width,
           height: size.height,
+          padding: EdgeInsets.only(top: 40, bottom: 40),
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
-                  width: size.width * 0.9,
+                  width: size.width * 0.8,
                   child: Column(
                     children: <Widget>[
                       Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Column(
                               children: <Widget>[
-                                Image.asset("assets/image/jpeg/foto_1.jpg"),
+                                Image.asset(
+                                  "assets/image/jpeg/foto_1.jpg",
+                                  width: size.width * 0.3,
+                                ),
                                 Text(
                                   "SALAH",
                                   style: TextStyle(
@@ -41,7 +43,8 @@ class PhotoPage extends StatelessWidget {
                             ),
                             Column(
                               children: <Widget>[
-                                Image.asset("assets/image/jpeg/foto_2.jpg"),
+                                Image.asset("assets/image/jpeg/foto_2.jpg",
+                                    width: size.width * 0.3),
                                 Text(
                                   "BENAR",
                                   style: TextStyle(
@@ -53,7 +56,8 @@ class PhotoPage extends StatelessWidget {
                             )
                           ]),
                       Container(
-                          width: size.width * 0.85,
+                          margin: EdgeInsets.only(top: 20),
+                          width: size.width * 0.8,
                           alignment: Alignment.centerLeft,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +83,7 @@ class PhotoPage extends StatelessWidget {
                   child: Text("Ambil Foto"),
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFFFF4949),
-                    minimumSize: Size(size.width * 0.85, 40),
+                    minimumSize: Size(size.width * 0.8, 40),
                   ),
                 )
               ]),
