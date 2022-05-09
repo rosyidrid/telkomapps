@@ -140,7 +140,7 @@ class _FormPageState extends State<FormPage> {
     };
 
     final prefs = await SharedPreferences.getInstance();
-    var resLogin = await CallAPI().postData(userLogin, 'login');
+    var resLogin = await CallAPI().login(userLogin, 'login');
     var bodyLogin = json.decode(resLogin.body);
     //cek apakah login berhasil
     if (resLogin.statusCode == 200) {

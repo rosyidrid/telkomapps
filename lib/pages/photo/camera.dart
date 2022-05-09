@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:telkom_apps/pages/photo/photo.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key}) : super(key: key);
@@ -15,7 +14,7 @@ class _CameraPageState extends State<CameraPage> {
 
   Future<void> initializeCamera() async {
     var camera = await availableCameras();
-    _controller = CameraController(camera[1], ResolutionPreset.medium);
+    _controller = CameraController(camera[1], ResolutionPreset.max);
     await _controller.initialize();
   }
 
@@ -25,54 +24,56 @@ class _CameraPageState extends State<CameraPage> {
     super.dispose();
   }
 
-  Future<File> takePicture() async {
-    Directory root = await getTemporaryDirectory();
-    String path = '${root.path}/Picture';
-    await Directory(path).create(recursive: true);
-    String filePath = '$path/${DateTime.now()}.png';
-    try {
-      await _controller.takePicture();
-    } catch (e) {
-      print(e);
-    }
-    return File(filePath);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFFFF4949),
+        title: Text('Ambil Foto'),
+        centerTitle: true,
+      ),
       backgroundColor: Colors.black,
       body: FutureBuilder<void>(
           future: initializeCamera(),
-          builder: (context, snapshot) =>
-              (snapshot.connectionState == ConnectionState.done)
-                  ? Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: CameraPreview(_controller),
-                    )
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          try {
-            final image = await _controller.takePicture();
-            await Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(
-                  // Pass the automatically generated path to
-                  // the DisplayPictureScreen widget.
-                  imagePath: image.path,
-                ),
-              ),
-            );
-          } catch (e) {
-            print(e);
-          }
-        },
-        child: const Icon(Icons.camera_alt),
-      ),
+          builder: (context, snapshot) => (snapshot.connectionState ==
+                  ConnectionState.done)
+              ? Stack(children: [
+                  Column(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        width: MediaQuery.of(context).size.width,
+                        child: CameraPreview(_controller),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: FloatingActionButton(
+                          onPressed: () async {
+                            try {
+                              final image = await _controller.takePicture();
+                              await Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => DisplayPictureScreen(
+                                    // Pass the automatically generated path to
+                                    // the DisplayPictureScreen widget.
+                                    imagePath: image.path,
+                                  ),
+                                ),
+                              );
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
+                          backgroundColor: Color(0xFFFF4949),
+                          child: const Icon(Icons.camera_alt),
+                        ),
+                      )
+                    ],
+                  )
+                ])
+              : Center(
+                  child: CircularProgressIndicator(),
+                )),
     );
   }
 }
@@ -98,7 +99,10 @@ class DisplayPictureScreen extends StatelessWidget {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Image.file(File(imagePath)),
+              Image.file(
+                File(imagePath),
+                height: size.height * .6
+              ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
