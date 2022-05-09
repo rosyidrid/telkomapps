@@ -11,7 +11,7 @@ class ListViewPage extends StatefulWidget {
 class _ListViewPageState extends State<ListViewPage> {
   List<Container> list = [];
   List<Container> _list() {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 5; i++) {
       var content = Container(
         width: MediaQuery.of(context).size.width * .8,
         padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
@@ -54,7 +54,13 @@ class _ListViewPageState extends State<ListViewPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: _list(),
+      children: <Widget>[
+        Text("Hasil Pencarian : ",
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        Column(
+          children: _list(),
+        ),
+      ],
     );
   }
 }

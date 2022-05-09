@@ -1,8 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:telkom_apps/pages/photo/camera.dart';
 
-class PhotoPage extends StatelessWidget {
-  const PhotoPage({Key? key}) : super(key: key);
+class PhotoPage extends StatefulWidget {
+  @override
+  State<PhotoPage> createState() => _PhotoPageState();
+}
 
+class _PhotoPageState extends State<PhotoPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -79,7 +84,10 @@ class PhotoPage extends StatelessWidget {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push<File>(context,
+                        MaterialPageRoute(builder: (context) => CameraPage()));
+                  },
                   child: Text("Ambil Foto"),
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFFFF4949),

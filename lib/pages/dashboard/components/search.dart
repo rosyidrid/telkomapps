@@ -76,10 +76,10 @@ class _SearchState extends State<Search> {
               ),
               Divider(
                 color: Colors.grey,
-                height: 5,
+                height: 8,
                 thickness: 1,
                 indent: 5,
-                endIndent: 10,
+                endIndent: 12,
               ),
               TextField(
                 decoration: InputDecoration(
@@ -118,21 +118,26 @@ class _SearchState extends State<Search> {
       ],
     );
   }
+
   //function mengambil data user
   Future<Map<String, dynamic>> getUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.get("token"); //mengambil token
-    var dataUser = await CallAPI().getDataUser(token, 'user'); //mengambil data user
-    var user = json.decode(dataUser.body)["data"] as Map<String, dynamic>; //mengubah data user menjadi map
+    var dataUser =
+        await CallAPI().getDataUser(token, 'user'); //mengambil data user
+    var user = json.decode(dataUser.body)["data"]
+        as Map<String, dynamic>; //mengubah data user menjadi map
     return user; //mengembalikan data user
   }
 
   Future<void> logOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.get("token"); //mengambil token
-    var logout = await CallAPI().logout(token, 'logout'); //melakukan post token ke api logout
-    if (logout.statusCode == 200) { //jika status code logout 200 maka akan diarahkan ke halaman login
-      prefs.remove("token");
+    var logout = await CallAPI()
+        .logout(token, 'logout'); //melakukan post token ke api logout
+    if (logout.statusCode == 200) {
+      //jika status code logout 200 maka akan diarahkan ke halaman login
+      prefs.remove("token"); //menghapus token
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) {
           return LoginPage();
