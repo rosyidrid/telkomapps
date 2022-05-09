@@ -16,7 +16,6 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   doLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.get('token');
-    print(token);
     if (token != null) {
       return true;
     } else {

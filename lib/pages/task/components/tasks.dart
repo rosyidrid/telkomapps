@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:telkom_apps/API/api.dart';
 import 'package:telkom_apps/pages/map/map.dart';
 import 'package:telkom_apps/pages/photo/photo.dart';
 
@@ -60,8 +64,7 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => MapPage()));
+              _checkin(context);
             },
             child: Text(
               "Check - In Posisi",
@@ -78,8 +81,8 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => PhotoPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PhotoPage()));
             },
             child: Text(
               "Ambil Foto di Outlet",
@@ -96,8 +99,8 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => PhotoPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PhotoPage()));
             },
             child: Text(
               "Ambil Foto Stok Digipos",
@@ -114,8 +117,8 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => PhotoPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PhotoPage()));
             },
             child: Text(
               "Ambil Foto Nota Penjualan",
@@ -132,8 +135,8 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => PhotoPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PhotoPage()));
             },
             child: Text(
               "Ambil Foto Promo Comp",
@@ -150,8 +153,8 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => PhotoPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PhotoPage()));
             },
             child: Text(
               "Ambil Foto Harga EUP",
@@ -191,5 +194,20 @@ class Countdown extends AnimatedWidget {
         fontWeight: FontWeight.w500,
       ),
     );
+  }
+}
+
+Future _checkin(context) async {
+  final prefs = await SharedPreferences.getInstance();
+  var token = prefs.get('token');
+  var data = {
+    "outlet_id": 4101009584,
+    "latitude": -12033881,
+    "longitude": 1168837414
+  };
+  var checkin = await CallAPI().checkin(token, "checkin/radius", data);
+  var body = json.decode(checkin.body);
+  if (checkin.statusCode == 200) {
+    prefs.setInt('checkin_id', body['data']['id']);
   }
 }

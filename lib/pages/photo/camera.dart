@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:telkom_apps/API/api.dart';
+import 'package:telkom_apps/pages/task/checkin_task.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key}) : super(key: key);
@@ -99,13 +102,10 @@ class DisplayPictureScreen extends StatelessWidget {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Image.file(
-                File(imagePath),
-                height: size.height * .6
-              ),
+              Image.file(File(imagePath), height: size.height * .6),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  _upload(context);
                 },
                 child: Text("Upload Foto"),
                 style: ElevatedButton.styleFrom(
@@ -116,5 +116,65 @@ class DisplayPictureScreen extends StatelessWidget {
             ]),
       ),
     );
+  }
+
+  Future _upload(context) async {
+    final prefs = await SharedPreferences.getInstance();
+    var token = prefs.get('token');
+    var id = prefs.get('checkin_id');
+    var data = {'checkin_id': id, 'photo_selfie': imagePath};
+    var upload = await CallAPI().upload(token, 'checkin/photo/selfie', data);
+    var body = json.decode(upload.body);
+    if (upload.statusCode == 200) {
+      var message = body['message'];
+      Widget okButton = TextButton(
+        child: Text("Back to Task"),
+        onPressed: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => TaskPage(),
+            ),
+          );
+        },
+      );
+      AlertDialog alert = AlertDialog(
+        title: Text("Success"),
+        content: Text("$message"),
+        actions: [
+          okButton,
+        ],
+      );
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
+    } else {
+      var message = body['message'];
+      Widget okButton = TextButton(
+        child: Text("Back to Task"),
+        onPressed: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => TaskPage(),
+            ),
+          );
+        },
+      );
+      AlertDialog alert = AlertDialog(
+        title: Text("Failed"),
+        content: Text("$message"),
+        actions: [
+          okButton,
+        ],
+      );
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
+    }
   }
 }
