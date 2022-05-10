@@ -31,22 +31,22 @@ class _OutletPageState extends State<OutletPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    "${widget.outlet['outlet_id']}",
-                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 20),
-                  ),
-                  Text("${widget.outlet['namaoutlet']}",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 24)),
                   Row(
                     children: <Widget>[
-                      Icon(Icons.location_on, color: Color(0xFFFF4949)),
-                      Flexible(
-                        child: Text(
-                          "Jl. MT. Haryono RT. 8 No.54 Kelurahan Gn. Samarinda Baru, Kecamatan Balikpapan Utara",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w300, fontSize: 14),
-                        ),
+                      Icon(Icons.location_on,
+                          color: Color(0xFFFF4949), size: 40),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "${widget.outlet['outlet_id']}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300, fontSize: 20),
+                          ),
+                          Text("${widget.outlet['namaoutlet']}",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w300, fontSize: 20)),
+                        ],
                       )
                     ],
                   ),
@@ -56,9 +56,11 @@ class _OutletPageState extends State<OutletPage> {
                     borderSide: BorderSide(color: Color(0xFFFF4949)),
                     onPressed: () {
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => TaskPage()),
-                      );
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                TaskPage(outletId: widget.outlet['outlet_id']),
+                          ));
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

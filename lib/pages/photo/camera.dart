@@ -149,13 +149,9 @@ class DisplayPictureScreen extends StatelessWidget {
     if (upload.statusCode == 200) {
       var message = body['message'];
       Widget okButton = TextButton(
-        child: Text("Back to Task"),
+        child: Text("Close"),
         onPressed: () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => TaskPage(),
-            ),
-          );
+          Navigator.pop(context, false);
         },
       );
       AlertDialog alert = AlertDialog(
@@ -174,13 +170,9 @@ class DisplayPictureScreen extends StatelessWidget {
     } else {
       var message = body['message'];
       Widget okButton = TextButton(
-        child: Text("Back to Task"),
+        child: Text("Close"),
         onPressed: () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => TaskPage(),
-            ),
-          );
+          Navigator.pop(context, false);
         },
       );
       AlertDialog alert = AlertDialog(

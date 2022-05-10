@@ -13,7 +13,7 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   TextEditingController pjp = new TextEditingController();
-
+  TextEditingController nama_outlet = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -62,6 +62,7 @@ class _SearchState extends State<Search> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               TextField(
+                controller: pjp,
                 decoration: InputDecoration(
                   icon: Icon(Icons.calendar_today),
                   hintText: "PJP",
@@ -84,7 +85,7 @@ class _SearchState extends State<Search> {
                 endIndent: 12,
               ),
               TextField(
-                controller: pjp,
+                controller: nama_outlet,
                 decoration: InputDecoration(
                   icon: Icon(Icons.apartment),
                   hintText: "Nama Outlet",
@@ -101,7 +102,7 @@ class _SearchState extends State<Search> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  _pjp();
+                  _search();
                 },
                 child: Text(
                   "Search",
@@ -119,7 +120,7 @@ class _SearchState extends State<Search> {
           ),
         ),
         FutureBuilder(
-            future: _pjp(),
+            future: _search(),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -136,7 +137,8 @@ class _SearchState extends State<Search> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OutletPage(outlet: snapshot.data[i])));
+                              builder: (context) =>
+                                  OutletPage(outlet: snapshot.data[i])));
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,6 +171,19 @@ class _SearchState extends State<Search> {
                 );
                 array.add(content);
               }
+              if (snapshot.data.length == 0) {
+                return Container(
+                  margin: EdgeInsets.only(top: 40),
+                  child: Column(
+                    children: <Widget>[
+                      Icon(Icons.search_off, color: Colors.grey, size: 60),
+                      Text(
+                        "Tidak ada data",
+                      )
+                    ],
+                  ),
+                );
+              }
 
               return Column(
                 children: <Widget>[
@@ -185,19 +200,31 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Future _pjp() async {
+  Future _search() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.get('token');
-    print(token);
     var url = 'detail-data/';
-    var search = await CallAPI().getDataOutletPJP(token, url + pjp.text);
+    var search = await CallAPI().getDataOutletPJP(token, url);
     var body = json.decode(search.body);
     var data = [];
     for (var i in body['data']) {
       data.add(i);
     }
-    print(pjp.text);
-    return data;
+    var filterData;
+    if (pjp.text != "") {
+      filterData = data
+          .where(
+              (element) => element['hari'].toString().toLowerCase() == pjp.text)
+          .toList();
+    } else {
+      filterData = data
+          .where((element) =>
+              element['namaoutlet'].toString().toLowerCase() ==
+              nama_outlet.text)
+          .toList();
+    }
+    print(filterData);
+    return filterData;
   }
 
   //function mengambil data user
