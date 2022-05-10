@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
+import 'package:telkom_apps/pages/dashboard/dashboard.dart';
+import 'package:telkom_apps/pages/login/login.dart';
 import 'package:telkom_apps/pages/map/map.dart';
 import 'package:telkom_apps/pages/photo/photo.dart';
 
@@ -50,17 +52,15 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      padding: EdgeInsets.all(20),
+      height: size.height,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Countdown(
             animation: StepTween(
               begin: levelClock,
               end: 0,
             ).animate(_controller),
-          ),
-          SizedBox(
-            height: 20,
           ),
           ElevatedButton(
             onPressed: () {
@@ -78,11 +78,10 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
                 primary: Color(0xFFFF4949),
                 textStyle: TextStyle(fontWeight: FontWeight.w700)),
           ),
-          SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PhotoPage()));
+                  MaterialPageRoute(builder: (context) => PhotoPage(id: 1)));
             },
             child: Text(
               "Ambil Foto di Outlet",
@@ -96,11 +95,10 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
                 primary: Colors.grey[350],
                 textStyle: TextStyle(fontWeight: FontWeight.w700)),
           ),
-          SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PhotoPage()));
+                  MaterialPageRoute(builder: (context) => PhotoPage(id: 2)));
             },
             child: Text(
               "Ambil Foto Stok Digipos",
@@ -114,11 +112,10 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
                 primary: Colors.grey[350],
                 textStyle: TextStyle(fontWeight: FontWeight.w700)),
           ),
-          SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PhotoPage()));
+                  MaterialPageRoute(builder: (context) => PhotoPage(id: 3)));
             },
             child: Text(
               "Ambil Foto Nota Penjualan",
@@ -132,11 +129,10 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
                 primary: Colors.grey[350],
                 textStyle: TextStyle(fontWeight: FontWeight.w700)),
           ),
-          SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PhotoPage()));
+                  MaterialPageRoute(builder: (context) => PhotoPage(id: 4)));
             },
             child: Text(
               "Ambil Foto Promo Comp",
@@ -150,14 +146,45 @@ class _TasksState extends State<Tasks> with TickerProviderStateMixin {
                 primary: Colors.grey[350],
                 textStyle: TextStyle(fontWeight: FontWeight.w700)),
           ),
-          SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PhotoPage()));
+                  MaterialPageRoute(builder: (context) => PhotoPage(id: 5)));
             },
             child: Text(
               "Ambil Foto Harga EUP",
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 14,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+                minimumSize: Size(size.width * 0.8, 50),
+                primary: Colors.grey[350],
+                textStyle: TextStyle(fontWeight: FontWeight.w700)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _checkout(context);
+            },
+            child: Text(
+              "Check - Out Posisi",
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 14,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+                minimumSize: Size(size.width * 0.8, 50),
+                primary: Colors.grey[350],
+                textStyle: TextStyle(fontWeight: FontWeight.w700)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              logOut(context);
+            },
+            child: Text(
+              "Log Out",
               style: TextStyle(
                 color: Colors.grey[700],
                 fontSize: 14,
@@ -209,5 +236,34 @@ Future _checkin(context) async {
   var body = json.decode(checkin.body);
   if (checkin.statusCode == 200) {
     prefs.setInt('checkin_id', body['data']['id']);
+  }
+}
+
+Future _checkout(context) async {
+  final prefs = await SharedPreferences.getInstance();
+  var token = prefs.get('token');
+  var data = {
+    "checkin_id": prefs.get('checkin_id'),
+  };
+
+  var checkout = await CallAPI().checkout(token, 'checkin/checkout', data);
+  if (checkout.statusCode == 200) {
+    prefs.remove('checkin_id');
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => DashboardPage()),
+        (route) => false);
+  }
+}
+
+Future<void> logOut(context) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var token = prefs.get("token"); //mengambil token
+  var logout = await CallAPI()
+      .logout(token, 'logout'); //melakukan post token ke api logout
+  if (logout.statusCode == 200) {
+    //jika status code logout 200 maka akan  diarahkan ke halaman login
+    prefs.clear(); //menghapus semua data di shared preferences
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
   }
 }

@@ -145,12 +145,8 @@ class _FormPageState extends State<FormPage> {
     //cek apakah login berhasil
     if (resLogin.statusCode == 200) {
       //jika iya maka
-      //data username dan token akan di simpan di localstorage
+      //token akan di simpan di localstorage
       prefs.setString('token', bodyLogin['data']['token']);
-      var token = prefs.get("token");
-      var dataUser = await CallAPI().getDataUser(token, 'user');
-      var bodyUser = json.decode(dataUser.body);
-      prefs.setString('user', json.encode(bodyUser['data']));
       //setelah di simpen di localstorage
       //page berganti kehalaman dashboard
       Navigator.of(context).pushReplacement(

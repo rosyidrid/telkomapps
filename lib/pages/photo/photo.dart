@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:telkom_apps/pages/photo/camera.dart';
 
 class PhotoPage extends StatefulWidget {
+  const PhotoPage({Key? key, required this.id}) : super(key: key);
+  final int id;
   @override
   State<PhotoPage> createState() => _PhotoPageState();
 }
@@ -85,8 +87,10 @@ class _PhotoPageState extends State<PhotoPage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push<File>(context,
-                        MaterialPageRoute(builder: (context) => CameraPage()));
+                    Navigator.push<File>(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CameraPage(id: widget.id)));
                   },
                   child: Text("Ambil Foto"),
                   style: ElevatedButton.styleFrom(

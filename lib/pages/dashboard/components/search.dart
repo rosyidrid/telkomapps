@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
-import 'package:telkom_apps/pages/login/login.dart';
 import 'dart:convert';
+import 'package:telkom_apps/pages/outlet/outlet.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -12,6 +12,8 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  TextEditingController pjp = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -82,6 +84,7 @@ class _SearchState extends State<Search> {
                 endIndent: 12,
               ),
               TextField(
+                controller: pjp,
                 decoration: InputDecoration(
                   icon: Icon(Icons.apartment),
                   hintText: "Nama Outlet",
@@ -98,7 +101,7 @@ class _SearchState extends State<Search> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  logOut();
+                  _pjp();
                 },
                 child: Text(
                   "Search",
@@ -114,9 +117,87 @@ class _SearchState extends State<Search> {
               ),
             ],
           ),
-        )
+        ),
+        FutureBuilder(
+            future: _pjp(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                );
+              }
+              List<Container> array = [];
+              for (var i = 0; i < snapshot.data.length; i++) {
+                var content = Container(
+                  width: MediaQuery.of(context).size.width * .8,
+                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OutletPage(outlet: snapshot.data[i])));
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                            "${snapshot.data[i]['outlet_id']} - ${snapshot.data[i]['namaoutlet']}",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            )),
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.location_on,
+                                color: Colors.grey, size: 14),
+                            Text(" ${snapshot.data[i]['kota']}",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                )),
+                          ],
+                        )
+                      ],
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.white,
+                        minimumSize:
+                            Size(MediaQuery.of(context).size.width, 100)),
+                  ),
+                );
+                array.add(content);
+              }
+
+              return Column(
+                children: <Widget>[
+                  Text("Hasil Pencarian : ",
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  Column(
+                    children: array,
+                  )
+                ],
+              );
+            })
       ],
     );
+  }
+
+  Future _pjp() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.get('token');
+    print(token);
+    var url = 'detail-data/';
+    var search = await CallAPI().getDataOutletPJP(token, url + pjp.text);
+    var body = json.decode(search.body);
+    var data = [];
+    for (var i in body['data']) {
+      data.add(i);
+    }
+    print(pjp.text);
+    return data;
   }
 
   //function mengambil data user
@@ -128,21 +209,5 @@ class _SearchState extends State<Search> {
     var user = json.decode(dataUser.body)["data"]
         as Map<String, dynamic>; //mengubah data user menjadi map
     return user; //mengembalikan data user
-  }
-
-  Future<void> logOut() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.get("token"); //mengambil token
-    var logout = await CallAPI()
-        .logout(token, 'logout'); //melakukan post token ke api logout
-    if (logout.statusCode == 200) {
-      //jika status code logout 200 maka akan diarahkan ke halaman login
-      prefs.remove("token"); //menghapus token
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) {
-          return LoginPage();
-        }),
-      );
-    }
   }
 }
