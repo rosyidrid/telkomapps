@@ -240,8 +240,48 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
     var body = json.decode(checkin.body);
     if (checkin.statusCode == 200) {
       prefs.setInt('checkin_id', body['data']['id']);
+      var message = body['message'];
+      Widget okButton = TextButton(
+        child: Text("Close"),
+        onPressed: () {
+          Navigator.pop(context, false);
+        },
+      );
+      AlertDialog alert = AlertDialog(
+        title: Text("Success"),
+        content: Text("$message"),
+        actions: [
+          okButton,
+        ],
+      );
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
+    } else {
+      var message = body['message'];
+      Widget okButton = TextButton(
+        child: Text("Close"),
+        onPressed: () {
+          Navigator.pop(context, false);
+        },
+      );
+      AlertDialog alert = AlertDialog(
+        title: Text("Failed"),
+        content: Text("$message"),
+        actions: [
+          okButton,
+        ],
+      );
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
     }
-    print(checkin.body);
   }
 
   Future _checkout() async {
@@ -252,11 +292,52 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
     };
 
     var checkout = await CallAPI().checkout(token, 'checkin/checkout', data);
+    var body = json.decode(checkout.body);
     if (checkout.statusCode == 200) {
       prefs.remove('checkin_id');
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => DashboardPage()),
-          (route) => false);
+      var message = body['message'];
+      Widget okButton = TextButton(
+        child: Text("Back to Dashboard"),
+        onPressed: () {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => DashboardPage()),
+              (route) => false);
+        },
+      );
+      AlertDialog alert = AlertDialog(
+        title: Text("Success"),
+        content: Text("$message"),
+        actions: [
+          okButton,
+        ],
+      );
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
+    } else {
+      var message = body['message'];
+      Widget okButton = TextButton(
+        child: Text("Close"),
+        onPressed: () {
+          Navigator.pop(context, false);
+        },
+      );
+      AlertDialog alert = AlertDialog(
+        title: Text("Failed"),
+        content: Text("$message"),
+        actions: [
+          okButton,
+        ],
+      );
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
     }
   }
 
