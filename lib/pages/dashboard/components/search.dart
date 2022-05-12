@@ -223,7 +223,6 @@ class _SearchState extends State<Search> {
               nama_outlet.text)
           .toList();
     }
-    print(filterData);
     return filterData;
   }
 

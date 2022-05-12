@@ -40,11 +40,12 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
           }
         },
       ),
+      loaderColor: Color(0xFFFF4949),
       loadingText: Text(
         "Version 1.0",
         style: TextStyle(color: Colors.grey),
       ),
-      useLoader: false,
+      useLoader: true,
       seconds: 4,
       photoSize: 70.0,
       image: Image.asset(

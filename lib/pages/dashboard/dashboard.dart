@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:telkom_apps/pages/dashboard/components/search.dart';
 
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({Key? key,}) : super(key: key);
+  const DashboardPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();

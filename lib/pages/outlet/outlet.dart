@@ -58,8 +58,10 @@ class _OutletPageState extends State<OutletPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                TaskPage(outletId: widget.outlet['outlet_id']),
+                            builder: (context) => TaskPage(
+                                outletId: widget.outlet['outlet_id'],
+                                latitude: widget.outlet['latitude'],
+                                longitude: widget.outlet['longitude']),
                           ));
                     },
                     child: Row(
@@ -73,7 +75,7 @@ class _OutletPageState extends State<OutletPage> {
                 ],
               ),
             ),
-            Performansi()
+            Performansi(data: widget.outlet),
           ],
         ),
       ),

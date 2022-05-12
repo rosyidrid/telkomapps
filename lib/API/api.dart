@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 class CallAPI {
-  var dio = Dio();
   final String url = 'http://testdev.playbooksf.com/api/';
 
   _setHeadersLogin() => {

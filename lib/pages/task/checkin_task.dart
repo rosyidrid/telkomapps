@@ -4,11 +4,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
 import 'package:telkom_apps/pages/dashboard/dashboard.dart';
 import 'package:telkom_apps/pages/login/login.dart';
+import 'package:telkom_apps/pages/map/map.dart';
 import 'package:telkom_apps/pages/photo/photo.dart';
 
 class TaskPage extends StatefulWidget {
-  const TaskPage({Key? key, required this.outletId}) : super(key: key);
-  final int outletId;
+  const TaskPage(
+      {Key? key,
+      required this.outletId,
+      required this.latitude,
+      required this.longitude})
+      : super(key: key);
+  final outletId;
+  final latitude;
+  final longitude;
   @override
   State<TaskPage> createState() => _TaskPageState();
 }
@@ -72,7 +80,14 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              _checkin();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MapPage(
+                                            outletid: widget.outletId,
+                                            latitude: widget.latitude,
+                                            longitude: widget.longitude,
+                                          )));
                             },
                             child: Text(
                               "Check - In Posisi",
