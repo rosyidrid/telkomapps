@@ -78,29 +78,44 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                               end: 0,
                             ).animate(_controller),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MapPage(
-                                            outletid: widget.outletId,
-                                            latitude: widget.latitude,
-                                            longitude: widget.longitude,
-                                          )));
-                            },
-                            child: Text(
-                              "Check - In Posisi",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                                minimumSize: Size(size.width * 0.8, 50),
-                                primary: Color(0xFFFF4949),
-                                textStyle:
-                                    TextStyle(fontWeight: FontWeight.w700)),
+                          FutureBuilder(
+                            future: _checkin(),
+                            builder: ((context, snapshot) {
+                              return ElevatedButton(
+                                  onPressed: () {
+                                    if (snapshot.data == null) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => MapPage(
+                                                    outletid: widget.outletId,
+                                                    latitude: widget.latitude,
+                                                    longitude: widget.longitude,
+                                                  )));
+                                    } else {}
+                                  },
+                                  child: Text(
+                                    "Check - In Posisi",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  style: snapshot.data == null
+                                      ? ElevatedButton.styleFrom(
+                                          minimumSize:
+                                              Size(size.width * 0.8, 50),
+                                          primary: Color(0xFFFF4949),
+                                          textStyle: TextStyle(
+                                              fontWeight: FontWeight.w700))
+                                      : ElevatedButton.styleFrom(
+                                          minimumSize:
+                                              Size(size.width * 0.8, 50),
+                                          primary: Colors.grey[350],
+                                          textStyle: TextStyle(
+                                              color: Colors.grey[700],
+                                              fontWeight: FontWeight.w700)));
+                            }),
                           ),
                           ElevatedButton(
                             onPressed: () {
@@ -245,58 +260,8 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
 
   Future _checkin() async {
     final prefs = await SharedPreferences.getInstance();
-    var token = prefs.get('token');
-    var data = {
-      "outlet_id": widget.outletId,
-      "latitude": -12033881,
-      "longitude": 1168837414
-    };
-    var checkin = await CallAPI().checkin(token, "checkin/radius", data);
-    var body = json.decode(checkin.body);
-    if (checkin.statusCode == 200) {
-      prefs.setInt('checkin_id', body['data']['id']);
-      var message = body['message'];
-      Widget okButton = TextButton(
-        child: Text("Close"),
-        onPressed: () {
-          Navigator.pop(context, false);
-        },
-      );
-      AlertDialog alert = AlertDialog(
-        title: Text("Success"),
-        content: Text("$message"),
-        actions: [
-          okButton,
-        ],
-      );
-
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          });
-    } else {
-      var message = body['message'];
-      Widget okButton = TextButton(
-        child: Text("Close"),
-        onPressed: () {
-          Navigator.pop(context, false);
-        },
-      );
-      AlertDialog alert = AlertDialog(
-        title: Text("Failed"),
-        content: Text("$message"),
-        actions: [
-          okButton,
-        ],
-      );
-
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          });
-    }
+    var checkin = prefs.get('checkin');
+    return checkin;
   }
 
   Future _checkout() async {
