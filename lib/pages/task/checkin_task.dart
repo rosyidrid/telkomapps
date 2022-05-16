@@ -78,45 +78,29 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                               end: 0,
                             ).animate(_controller),
                           ),
-                          FutureBuilder(
-                            future: _checkin(),
-                            builder: ((context, snapshot) {
-                              return ElevatedButton(
-                                  onPressed: () {
-                                    if (snapshot.data == null) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => MapPage(
-                                                    outletid: widget.outletId,
-                                                    latitude: widget.latitude,
-                                                    longitude: widget.longitude,
-                                                  )));
-                                    } else {}
-                                  },
-                                  child: Text(
-                                    "Check - In Posisi",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  style: snapshot.data == null
-                                      ? ElevatedButton.styleFrom(
-                                          minimumSize:
-                                              Size(size.width * 0.8, 50),
-                                          primary: Color(0xFFFF4949),
-                                          textStyle: TextStyle(
-                                              fontWeight: FontWeight.w700))
-                                      : ElevatedButton.styleFrom(
-                                          minimumSize:
-                                              Size(size.width * 0.8, 50),
-                                          primary: Colors.grey[350],
-                                          textStyle: TextStyle(
-                                              color: Colors.grey[700],
-                                              fontWeight: FontWeight.w700)));
-                            }),
-                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MapPage(
+                                              outletid: widget.outletId,
+                                              latitude: widget.latitude,
+                                              longitude: widget.longitude,
+                                            )));
+                              },
+                              child: Text(
+                                "Check - In Posisi",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(size.width * 0.8, 50),
+                                  primary: Color(0xFFFF4949),
+                                  textStyle:
+                                      TextStyle(fontWeight: FontWeight.w700))),
                           ElevatedButton(
                             onPressed: () {
                               Navigator.push(

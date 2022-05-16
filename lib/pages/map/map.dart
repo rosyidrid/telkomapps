@@ -157,6 +157,13 @@ class _MapPageState extends State<MapPage> {
             builder: (BuildContext context) {
               return alert;
             });
+        markers.add(Marker(
+            markerId: MarkerId('User'),
+            infoWindow: InfoWindow(
+              title: 'User',
+            ),
+            position: LatLng(latitude, longitude),
+            icon: BitmapDescriptor.defaultMarker));
       }
     } else {}
   }
