@@ -70,7 +70,7 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                     Container(
                       height: size.height,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           Countdown(
                             animation: StepTween(

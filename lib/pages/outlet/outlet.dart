@@ -50,10 +50,13 @@ class _OutletPageState extends State<OutletPage> {
                       )
                     ],
                   ),
-                  OutlineButton(
-                    shape: RoundedRectangleBorder(
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+
+                        shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    borderSide: BorderSide(color: Color(0xFFFF4949)),
+                        side: BorderSide(color: Color(0xFFFF4949)),
+                    ),
                     onPressed: () {
                       Navigator.push(
                           context,
@@ -67,8 +70,8 @@ class _OutletPageState extends State<OutletPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text("Check-In "),
-                        Icon(Icons.login),
+                        Text("Check-In ", style: TextStyle(color: Color(0xFFFF4949))),
+                        Icon(Icons.login, color: Color(0xFFFF4949)),
                       ],
                     ),
                   )
