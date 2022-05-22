@@ -133,7 +133,7 @@ class _SearchState extends State<Search> {
                   width: MediaQuery.of(context).size.width * .8,
                   padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                   child: ElevatedButton(
-                    onPressed: () {=
+                    onPressed: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
