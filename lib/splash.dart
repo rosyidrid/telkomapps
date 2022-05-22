@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:telkom_apps/pages/dashboard/dashboard.dart';
 import 'package:telkom_apps/pages/login/login.dart';
@@ -22,6 +24,11 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
       prefs.clear();
       return false;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override

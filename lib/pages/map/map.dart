@@ -17,17 +17,20 @@ class LocationService {
   StreamController<UserLocation> _locationController =
       StreamController<UserLocation>();
   Stream<UserLocation> get locationStream => _locationController.stream;
-
   LocationService() {
-    location.requestPermission().then((value) {
-      if (value == PermissionStatus.granted) {
-        location.onLocationChanged.listen((value) {
-          if (value != null) {
-            _locationController.add(UserLocation(
-                latitude: value.latitude, longitude: value.longitude));
+    location.requestService().then((value) {
+      location.serviceEnabled().then((value) {
+        location.requestPermission().then((value) {
+          if (value == PermissionStatus.granted) {
+            location.onLocationChanged.listen((value) {
+              if (value != null) {
+                _locationController.add(UserLocation(
+                    latitude: value.latitude, longitude: value.longitude));
+              }
+            });
           }
         });
-      }
+      });
     });
   }
   bool isDisposed = false;
@@ -58,8 +61,13 @@ class _MapPageState extends State<MapPage> {
   LocationService locationService = LocationService();
 
   @override
+  void dispose() {
+    locationService.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var isCheckin = 0;
     markers.add(
       Marker(
           infoWindow: InfoWindow(
@@ -82,6 +90,8 @@ class _MapPageState extends State<MapPage> {
           builder: (_, snapshot) {
             if (snapshot.hasData) {
               markers.add(Marker(
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueAzure),
                 markerId: MarkerId('User'),
                 infoWindow: InfoWindow(
                   title: 'User',
@@ -89,12 +99,10 @@ class _MapPageState extends State<MapPage> {
                 position:
                     LatLng(snapshot.data!.latitude, snapshot.data!.longitude),
               ));
-              if (isCheckin == 0) {
-                checkin(snapshot.data!.latitude, snapshot.data!.longitude,
-                    isCheckin);
-                isCheckin = 1;
-              }
+
+              checkin(snapshot.data!.latitude, snapshot.data!.longitude);
             }
+
             return GoogleMap(
                 mapType: MapType.normal,
                 circles: Set.from([
@@ -102,7 +110,7 @@ class _MapPageState extends State<MapPage> {
                       circleId: CircleId('Outlet'),
                       center: LatLng(widget.latitude, widget.longitude),
                       radius: 20,
-                      fillColor: Color.fromARGB(83, 221, 221, 221),
+                      fillColor: Color.fromARGB(82, 138, 138, 138),
                       strokeColor: Colors.red,
                       strokeWidth: 1)
                 ]),
@@ -112,7 +120,7 @@ class _MapPageState extends State<MapPage> {
                 onMapCreated: (controller) => _controller = controller,
                 initialCameraPosition: CameraPosition(
                     target: LatLng(widget.latitude, widget.longitude),
-                    zoom: 25));
+                    zoom: 19));
           }),
       // body:
       floatingActionButton: FloatingActionButton.extended(
@@ -124,47 +132,37 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  checkin(latitude, longitude, isCheckin) async {
-    if (isCheckin == 0) {
-      final prefs = await SharedPreferences.getInstance();
-      var token = prefs.get('token');
-      var data = {
-        "outlet_id": widget.outletid,
-        "latitude": latitude,
-        "longitude": longitude
-      };
-      var checkin = await CallAPI().checkin(token, "checkin/radius", data);
-      var body = json.decode(checkin.body);
-      if (checkin.statusCode == 200) {
-        prefs.setInt('checkin_id', body['data']['id']);
-        prefs.setBool('checkin', true);
-        var message = body['message'];
-        Widget okButton = TextButton(
-          child: Text("Close"),
-          onPressed: () {
-            Navigator.pop(context, true);
-          },
-        );
-        AlertDialog alert = AlertDialog(
-          title: Text("Success"),
-          content: Text("$message"),
-          actions: [
-            okButton,
-          ],
-        );
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return alert;
-            });
-        markers.add(Marker(
-            markerId: MarkerId('User'),
-            infoWindow: InfoWindow(
-              title: 'User',
-            ),
-            position: LatLng(latitude, longitude),
-            icon: BitmapDescriptor.defaultMarker));
-      }
-    } else {}
+  checkin(latitude, longitude) async {
+    final prefs = await SharedPreferences.getInstance();
+    var token = prefs.get('token');
+    var data = {
+      "outlet_id": widget.outletid,
+      "latitude": latitude,
+      "longitude": longitude
+    };
+    var checkin = await CallAPI().checkin(token, "checkin/radius", data);
+    var body = json.decode(checkin.body);
+    if (checkin.statusCode == 200) {
+      prefs.setInt('checkin_id', body['data']['id']);
+      var message = body['message'];
+      Widget okButton = TextButton(
+        child: Text("Close"),
+        onPressed: () {
+          Navigator.pop(context, true);
+        },
+      );
+      AlertDialog alert = AlertDialog(
+        title: Text("Success"),
+        content: Text("$message"),
+        actions: [
+          okButton,
+        ],
+      );
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
+    }
   }
 }

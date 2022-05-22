@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,35 +22,46 @@ class TaskPage extends StatefulWidget {
   State<TaskPage> createState() => _TaskPageState();
 }
 
-class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
-  int _counter = 0;
-  late AnimationController _controller;
-  int levelClock = 0;
+class _TaskPageState extends State<TaskPage> {
+  static const maxSeconds = 59;
+  static const maxMinute = 19;
+  int seconds = maxSeconds;
+  int minute = maxMinute;
+  Timer? timer;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
+  void startTime() {
+    timer = Timer.periodic(Duration(seconds: 1), (_) {
+      if (seconds > 0) {
+        setState(() {
+          seconds--;
+        });
+        if (seconds == 0) {
+          if (minute > 0) {
+            setState(() {
+              minute--;
+            });
+            seconds = maxSeconds;
+          }
+        }
+      } else {
+        setState(() {
+          timer?.cancel();
+          _checkout();
+        });
+      }
     });
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void initState() {
+    startTime();
+    super.initState();
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-        vsync: this,
-        duration: Duration(
-            seconds:
-                levelClock) // gameData.levelClock is a user entered number elsewhere in the applciation
-        );
-
-    _controller.forward();
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -64,7 +76,7 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
         body: SingleChildScrollView(
             child: Container(
                 width: size.width,
-                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                padding: EdgeInsets.only(top: 10),
                 child: Column(
                   children: <Widget>[
                     Container(
@@ -72,12 +84,7 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
-                          Countdown(
-                            animation: StepTween(
-                              begin: levelClock,
-                              end: 0,
-                            ).animate(_controller),
-                          ),
+                          buildTime(),
                           ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
@@ -111,13 +118,12 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                             child: Text(
                               "Ambil Foto di Outlet",
                               style: TextStyle(
-                                color: Colors.grey[700],
                                 fontSize: 14,
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
                                 minimumSize: Size(size.width * 0.8, 50),
-                                primary: Colors.grey[350],
+                                primary: Color(0xFFFF4949),
                                 textStyle:
                                     TextStyle(fontWeight: FontWeight.w700)),
                           ),
@@ -131,13 +137,12 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                             child: Text(
                               "Ambil Foto Stok Digipos",
                               style: TextStyle(
-                                color: Colors.grey[700],
                                 fontSize: 14,
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
                                 minimumSize: Size(size.width * 0.8, 50),
-                                primary: Colors.grey[350],
+                                primary: Color(0xFFFF4949),
                                 textStyle:
                                     TextStyle(fontWeight: FontWeight.w700)),
                           ),
@@ -151,13 +156,12 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                             child: Text(
                               "Ambil Foto Nota Penjualan",
                               style: TextStyle(
-                                color: Colors.grey[700],
                                 fontSize: 14,
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
                                 minimumSize: Size(size.width * 0.8, 50),
-                                primary: Colors.grey[350],
+                                primary: Color(0xFFFF4949),
                                 textStyle:
                                     TextStyle(fontWeight: FontWeight.w700)),
                           ),
@@ -171,13 +175,12 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                             child: Text(
                               "Ambil Foto Promo Comp",
                               style: TextStyle(
-                                color: Colors.grey[700],
                                 fontSize: 14,
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
                                 minimumSize: Size(size.width * 0.8, 50),
-                                primary: Colors.grey[350],
+                                primary: Color(0xFFFF4949),
                                 textStyle:
                                     TextStyle(fontWeight: FontWeight.w700)),
                           ),
@@ -191,30 +194,12 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                             child: Text(
                               "Ambil Foto Harga EUP",
                               style: TextStyle(
-                                color: Colors.grey[700],
                                 fontSize: 14,
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
                                 minimumSize: Size(size.width * 0.8, 50),
-                                primary: Colors.grey[350],
-                                textStyle:
-                                    TextStyle(fontWeight: FontWeight.w700)),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              _checkout();
-                            },
-                            child: Text(
-                              "Check - Out Posisi",
-                              style: TextStyle(
-                                color: Colors.grey[700],
-                                fontSize: 14,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                                minimumSize: Size(size.width * 0.8, 50),
-                                primary: Colors.grey[350],
+                                primary: Color(0xFFFF4949),
                                 textStyle:
                                     TextStyle(fontWeight: FontWeight.w700)),
                           ),
@@ -225,13 +210,12 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                             child: Text(
                               "Log Out",
                               style: TextStyle(
-                                color: Colors.grey[700],
                                 fontSize: 14,
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
                                 minimumSize: Size(size.width * 0.8, 50),
-                                primary: Colors.grey[350],
+                                primary: Color(0xFFFF4949),
                                 textStyle:
                                     TextStyle(fontWeight: FontWeight.w700)),
                           ),
@@ -242,10 +226,12 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
                 ))));
   }
 
-  Future _checkin() async {
-    final prefs = await SharedPreferences.getInstance();
-    var checkin = prefs.get('checkin');
-    return checkin;
+  Widget buildTime() {
+    return Text('$minute : $seconds',
+        style: TextStyle(
+            color: Color(0xFFFF4949),
+            fontSize: 24,
+            fontWeight: FontWeight.bold));
   }
 
   Future _checkout() async {
@@ -259,6 +245,7 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
     var body = json.decode(checkout.body);
     if (checkout.statusCode == 200) {
       prefs.remove('checkin_id');
+      prefs.remove('checkin');
       var message = body['message'];
       Widget okButton = TextButton(
         child: Text("Back to Dashboard"),
@@ -317,28 +304,5 @@ class _TaskPageState extends State<TaskPage> with TickerProviderStateMixin {
           MaterialPageRoute(builder: (context) => LoginPage()),
           (route) => false);
     }
-  }
-}
-
-class Countdown extends AnimatedWidget {
-  Countdown({Key? key, required this.animation})
-      : super(key: key, listenable: animation);
-  Animation<int> animation;
-
-  @override
-  build(BuildContext context) {
-    Duration clockTimer = Duration(seconds: animation.value);
-
-    String timerText =
-        '${clockTimer.inMinutes.remainder(60).toString()}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
-
-    return Text(
-      "$timerText",
-      style: TextStyle(
-        fontSize: 30,
-        color: Color(0xFFFF4949),
-        fontWeight: FontWeight.w500,
-      ),
-    );
   }
 }
