@@ -128,57 +128,74 @@ class _SearchState extends State<Search> {
                 );
               }
               List<Container> array = [];
-              for (var i = 0; i < snapshot.data.length; i++) {
-                var content = Container(
-                  width: MediaQuery.of(context).size.width * .8,
-                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  OutletPage(outlet: snapshot.data[i])));
-                    },
+              if (snapshot.data != null) {
+                for (var i = 0; i < snapshot.data.length; i++) {
+                  var content = Container(
+                    width: MediaQuery.of(context).size.width * .8,
+                    padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    OutletPage(outlet: snapshot.data[i])));
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                              "${snapshot.data[i]['outlet_id']} - ${snapshot.data[i]['namaoutlet']}",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              )),
+                          Row(
+                            children: <Widget>[
+                              Icon(Icons.location_on,
+                                  color: Colors.grey, size: 14),
+                              Text(" ${snapshot.data[i]['kota']}",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  )),
+                            ],
+                          )
+                        ],
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.white,
+                          minimumSize:
+                              Size(MediaQuery.of(context).size.width, 100)),
+                    ),
+                  );
+                  array.add(content);
+                }
+
+                if (snapshot.data.length == 0) {
+                  return Container(
+                    margin: EdgeInsets.only(top: 40),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Icon(Icons.search_off, color: Colors.grey, size: 60),
                         Text(
-                            "${snapshot.data[i]['outlet_id']} - ${snapshot.data[i]['namaoutlet']}",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            )),
-                        Row(
-                          children: <Widget>[
-                            Icon(Icons.location_on,
-                                color: Colors.grey, size: 14),
-                            Text(" ${snapshot.data[i]['kota']}",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                )),
-                          ],
+                          "Tidak ada data",
                         )
                       ],
                     ),
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
-                        minimumSize:
-                            Size(MediaQuery.of(context).size.width, 100)),
-                  ),
-                );
-                array.add(content);
-              }
-              if (snapshot.data.length == 0) {
+                  );
+                }
+              } else {
                 return Container(
                   margin: EdgeInsets.only(top: 40),
                   child: Column(
                     children: <Widget>[
-                      Icon(Icons.search_off, color: Colors.grey, size: 60),
+                      Icon(Icons.signal_wifi_bad_outlined,
+                          color: Color.fromARGB(255, 235, 2, 2), size: 40),
                       Text(
-                        "Tidak ada data",
+                        "No Connection\nPlease turn on your data",
+                        textAlign: TextAlign.center,
                       )
                     ],
                   ),
