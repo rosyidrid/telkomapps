@@ -48,6 +48,12 @@ class CallAPI {
         body: jsonEncode(data), headers: _setHeaders(token));
   }
 
+  checkRadius(token, apiURL, data) async {
+    var fullUrl = url + apiURL;
+    return await http.delete(Uri.parse(fullUrl),
+        body: jsonEncode(data), headers: _setHeaders(token));
+  }
+
   upload(token, apiURL, data, photo) async {
     var fullUrl = url + apiURL;
     var request = http.MultipartRequest('POST', Uri.parse(fullUrl));

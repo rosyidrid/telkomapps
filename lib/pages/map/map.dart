@@ -1,10 +1,26 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
+import 'package:telkom_apps/pages/dashboard/dashboard.dart';
+
+class MapPage extends StatefulWidget {
+  const MapPage(
+      {Key? key,
+      required this.outletid,
+      required this.latitude,
+      required this.longitude})
+      : super(key: key);
+  final outletid;
+  final latitude;
+  final longitude;
+  @override
+  State<MapPage> createState() => _MapPageState();
+}
 
 class UserLocation {
   UserLocation({required this.latitude, required this.longitude});
@@ -33,37 +49,20 @@ class LocationService {
       });
     });
   }
-  bool isDisposed = false;
-
-  void dispose() async {
-    isDisposed = true;
-    await _locationController.close();
-  }
-}
-
-class MapPage extends StatefulWidget {
-  const MapPage(
-      {Key? key,
-      required this.outletid,
-      required this.latitude,
-      required this.longitude})
-      : super(key: key);
-  final outletid;
-  final latitude;
-  final longitude;
-  @override
-  State<MapPage> createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
   late GoogleMapController _controller;
+  List<LatLng> _loc = [];
   Set<Marker> markers = {};
   LocationService locationService = LocationService();
+  double totalDistance = 0;
+  bool check = false;
 
   @override
-  void dispose() {
-    locationService.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    check = false;
   }
 
   @override
@@ -100,9 +99,27 @@ class _MapPageState extends State<MapPage> {
                     LatLng(snapshot.data!.latitude, snapshot.data!.longitude),
               ));
 
-              checkin(snapshot.data!.latitude, snapshot.data!.longitude);
-            }
+              _loc.add(
+                  LatLng(snapshot.data!.latitude, snapshot.data!.longitude));
+              _loc.add(LatLng(widget.latitude, widget.longitude));
+              for (var i = 0; i < _loc.length - 1; i++) {
+                totalDistance = calculateDistance(
+                    _loc[i].latitude,
+                    _loc[i].longitude,
+                    _loc[i + 1].latitude,
+                    _loc[i + 1].longitude);
+              }
 
+              if (check == false) {
+                checkin(
+                    snapshot.data!.latitude, snapshot.data!.longitude, check);
+                check = true;
+              }
+
+              if (totalDistance > 10.0) {
+                checkRadius();
+              }
+            }
             return GoogleMap(
                 mapType: MapType.normal,
                 circles: Set.from([
@@ -122,47 +139,92 @@ class _MapPageState extends State<MapPage> {
                     target: LatLng(widget.latitude, widget.longitude),
                     zoom: 19));
           }),
-      // body:
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {},
-        label: Text('Syncronize'),
-        backgroundColor: Color(0xFFFF4949),
-        icon: Icon(Icons.location_history),
-      ),
     );
   }
 
-  checkin(latitude, longitude) async {
+  double calculateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 1000 * 12742 * asin(sqrt(a));
+  }
+
+  checkRadius() async {
     final prefs = await SharedPreferences.getInstance();
+
     var token = prefs.get('token');
+    var id = prefs.get('checkin_id');
     var data = {
-      "outlet_id": widget.outletid,
-      "latitude": latitude,
-      "longitude": longitude
+      "checkin_id": id,
     };
-    var checkin = await CallAPI().checkin(token, "checkin/radius", data);
-    var body = json.decode(checkin.body);
-    if (checkin.statusCode == 200) {
-      prefs.setInt('checkin_id', body['data']['id']);
-      var message = body['message'];
+
+    var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
+    var body = json.decode(check.body);
+    var message = body['message'];
+    if (check.statusCode == 200) {
+      prefs.remove('checkin_id');
       Widget okButton = TextButton(
-        child: Text("Close"),
+        child: Text("Kembali ke Dashboard"),
         onPressed: () {
-          Navigator.pop(context, true);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => DashboardPage()),
+              (route) => false);
         },
       );
+
       AlertDialog alert = AlertDialog(
-        title: Text("Success"),
+        title: Text("Peringatan !"),
         content: Text("$message"),
         actions: [
           okButton,
         ],
       );
+
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return alert;
           });
+    }
+  }
+
+  checkin(latitude, longitude, check) async {
+    if (check == false) {
+      final prefs = await SharedPreferences.getInstance();
+      var token = prefs.get('token');
+      var data = {
+        "outlet_id": widget.outletid,
+        "latitude": latitude,
+        "longitude": longitude
+      };
+
+      var checkin = await CallAPI().checkin(token, "checkin/radius", data);
+      var body = json.decode(checkin.body);
+      var message = body['message'];
+      if (checkin.statusCode == 200) {
+        prefs.setInt('checkin_id', body['data']['id']);
+        Widget okButton = TextButton(
+          child: Text("Tutup"),
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+        );
+        AlertDialog alert = AlertDialog(
+          title: Text("Berhasil"),
+          content: Text("$message"),
+          actions: [
+            okButton,
+          ],
+        );
+
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            });
+      }
     }
   }
 }

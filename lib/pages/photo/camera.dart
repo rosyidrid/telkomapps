@@ -146,16 +146,18 @@ class DisplayPictureScreen extends StatelessWidget {
     var data = {'checkin_id': checkinId, 'photo_' + photo: imagePath};
     var upload = await CallAPI().upload(token, url, data, photo);
     var body = json.decode(upload.body);
+    var message = body['message'];
     if (upload.statusCode == 200) {
-      var message = body['message'];
       Widget okButton = TextButton(
         child: Text("Close"),
         onPressed: () {
           Navigator.pop(context, false);
+          Navigator.pop(context, false);
+          Navigator.pop(context, false);
         },
       );
       AlertDialog alert = AlertDialog(
-        title: Text("Success"),
+        title: Text("Berhasil"),
         content: Text("$message"),
         actions: [
           okButton,
@@ -168,15 +170,14 @@ class DisplayPictureScreen extends StatelessWidget {
             return alert;
           });
     } else {
-      var message = body['message'];
       Widget okButton = TextButton(
-        child: Text("Close"),
+        child: Text("Tutup"),
         onPressed: () {
           Navigator.pop(context, false);
         },
       );
       AlertDialog alert = AlertDialog(
-        title: Text("Failed"),
+        title: Text("Gagal"),
         content: Text("$message"),
         actions: [
           okButton,

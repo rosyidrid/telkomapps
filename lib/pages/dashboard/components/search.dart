@@ -20,30 +20,6 @@ class _SearchState extends State<Search> {
     return Column(
       children: <Widget>[
         Container(
-            width: size.width * .8,
-            child: FutureBuilder(
-              future: getUser(),
-              builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(color: Colors.white),
-                  );
-                }
-                return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(Icons.account_circle_rounded,
-                          color: Colors.white, size: 60),
-                      Flexible(
-                          child: Text("${snapshot.data?['name']}",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500)))
-                    ]);
-              },
-            )),
-        Container(
           margin: EdgeInsets.only(top: 20, bottom: 20),
           width: size.width * .8,
           padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -102,7 +78,7 @@ class _SearchState extends State<Search> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  _search();
+                  FocusScope.of(context).unfocus();
                 },
                 child: Text(
                   "Search",
@@ -124,7 +100,8 @@ class _SearchState extends State<Search> {
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                  child: CircularProgressIndicator(color: Colors.white),
+                  heightFactor: 8,
+                  child: CircularProgressIndicator(color: Color(0xFFFF4949)),
                 );
               }
               List<Container> array = [];
@@ -241,16 +218,5 @@ class _SearchState extends State<Search> {
           .toList();
     }
     return filterData;
-  }
-
-  //function mengambil data user
-  Future<Map<String, dynamic>> getUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.get("token"); //mengambil token
-    var dataUser =
-        await CallAPI().getDataUser(token, 'user'); //mengambil data user
-    var user = json.decode(dataUser.body)["data"]
-        as Map<String, dynamic>; //mengubah data user menjadi map
-    return user; //mengembalikan data user
   }
 }
