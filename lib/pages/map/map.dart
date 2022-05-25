@@ -49,6 +49,45 @@ class LocationService {
       });
     });
   }
+
+  checkRadius(context) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.get('token');
+    var id = prefs.get('checkin_id');
+    var data = {
+      "checkin_id": id,
+    };
+
+    var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
+    var body = json.decode(check.body);
+    var message = body['message'];
+    if (check.statusCode == 200) {
+      prefs.remove('checkin_id');
+      Widget okButton = TextButton(
+        child: Text("Kembali ke Outlet"),
+        onPressed: () {
+          Navigator.pop(context, false);
+          Navigator.pop(context, false);
+          Navigator.pop(context, false);
+        },
+      );
+
+      AlertDialog alert = AlertDialog(
+        title: Text("Peringatan !"),
+        content: Text("$message"),
+        actions: [
+          okButton,
+        ],
+      );
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
+    }
+  }
 }
 
 class _MapPageState extends State<MapPage> {
@@ -115,9 +154,8 @@ class _MapPageState extends State<MapPage> {
                     snapshot.data!.latitude, snapshot.data!.longitude, check);
                 check = true;
               }
-
               if (totalDistance > 10.0) {
-                checkRadius();
+                locationService.checkRadius(context);
               }
             }
             return GoogleMap(
@@ -149,45 +187,6 @@ class _MapPageState extends State<MapPage> {
         c((lat2 - lat1) * p) / 2 +
         c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
     return 1000 * 12742 * asin(sqrt(a));
-  }
-
-  checkRadius() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    var token = prefs.get('token');
-    var id = prefs.get('checkin_id');
-    var data = {
-      "checkin_id": id,
-    };
-
-    var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
-    var body = json.decode(check.body);
-    var message = body['message'];
-    if (check.statusCode == 200) {
-      prefs.remove('checkin_id');
-      Widget okButton = TextButton(
-        child: Text("Kembali ke Dashboard"),
-        onPressed: () {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => DashboardPage()),
-              (route) => false);
-        },
-      );
-
-      AlertDialog alert = AlertDialog(
-        title: Text("Peringatan !"),
-        content: Text("$message"),
-        actions: [
-          okButton,
-        ],
-      );
-
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          });
-    }
   }
 
   checkin(latitude, longitude, check) async {
