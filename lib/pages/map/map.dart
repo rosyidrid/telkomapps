@@ -6,7 +6,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
-import 'package:telkom_apps/pages/dashboard/dashboard.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage(
@@ -28,12 +27,17 @@ class UserLocation {
   final longitude;
 }
 
-class LocationService {
+class _MapPageState extends State<MapPage> {
+  late GoogleMapController _controller;
+  var long;
+  var lat;
+  List<LatLng> _loc = [];
+  Set<Marker> markers = {};
   Location location = Location();
   StreamController<UserLocation> _locationController =
       StreamController<UserLocation>();
   Stream<UserLocation> get locationStream => _locationController.stream;
-  LocationService() {
+  _MapPageState() {
     location.requestService().then((value) {
       location.serviceEnabled().then((value) {
         location.requestPermission().then((value) {
@@ -42,6 +46,26 @@ class LocationService {
               if (value != null) {
                 _locationController.add(UserLocation(
                     latitude: value.latitude, longitude: value.longitude));
+                lat = value.latitude;
+                long = value.longitude;
+                _loc.add(LatLng(lat, long));
+                _loc.add(LatLng(widget.latitude, widget.longitude));
+                for (var i = 0; i < _loc.length - 1; i++) {
+                  totalDistance = calculateDistance(
+                      _loc[i].latitude,
+                      _loc[i].longitude,
+                      _loc[i + 1].latitude,
+                      _loc[i + 1].longitude);
+                }
+
+                if (check == false) {
+                  checkin(value.latitude, value.longitude, check);
+                  check = true;
+                }
+                print(totalDistance);
+                if (totalDistance > 20.0) {
+                  checkRadius();
+                }
               }
             });
           }
@@ -49,52 +73,6 @@ class LocationService {
       });
     });
   }
-
-  checkRadius(context) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    var token = prefs.get('token');
-    var id = prefs.get('checkin_id');
-    var data = {
-      "checkin_id": id,
-    };
-
-    var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
-    var body = json.decode(check.body);
-    var message = body['message'];
-    if (check.statusCode == 200) {
-      prefs.remove('checkin_id');
-      Widget okButton = TextButton(
-        child: Text("Kembali ke Outlet"),
-        onPressed: () {
-          Navigator.pop(context, false);
-          Navigator.pop(context, false);
-          Navigator.pop(context, false);
-        },
-      );
-
-      AlertDialog alert = AlertDialog(
-        title: Text("Peringatan !"),
-        content: Text("$message"),
-        actions: [
-          okButton,
-        ],
-      );
-
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          });
-    }
-  }
-}
-
-class _MapPageState extends State<MapPage> {
-  late GoogleMapController _controller;
-  List<LatLng> _loc = [];
-  Set<Marker> markers = {};
-  LocationService locationService = LocationService();
   double totalDistance = 0;
   bool check = false;
 
@@ -124,7 +102,7 @@ class _MapPageState extends State<MapPage> {
         centerTitle: true,
       ),
       body: StreamBuilder<UserLocation>(
-          stream: locationService.locationStream,
+          stream: locationStream,
           builder: (_, snapshot) {
             if (snapshot.hasData) {
               markers.add(Marker(
@@ -137,26 +115,6 @@ class _MapPageState extends State<MapPage> {
                 position:
                     LatLng(snapshot.data!.latitude, snapshot.data!.longitude),
               ));
-
-              _loc.add(
-                  LatLng(snapshot.data!.latitude, snapshot.data!.longitude));
-              _loc.add(LatLng(widget.latitude, widget.longitude));
-              for (var i = 0; i < _loc.length - 1; i++) {
-                totalDistance = calculateDistance(
-                    _loc[i].latitude,
-                    _loc[i].longitude,
-                    _loc[i + 1].latitude,
-                    _loc[i + 1].longitude);
-              }
-
-              if (check == false) {
-                checkin(
-                    snapshot.data!.latitude, snapshot.data!.longitude, check);
-                check = true;
-              }
-              if (totalDistance > 10.0) {
-                locationService.checkRadius(context);
-              }
             }
             return GoogleMap(
                 mapType: MapType.normal,
@@ -189,6 +147,45 @@ class _MapPageState extends State<MapPage> {
     return 1000 * 12742 * asin(sqrt(a));
   }
 
+  Future checkRadius() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.get('token');
+    var id = prefs.get('checkin_id');
+    var data = {
+      "checkin_id": id,
+    };
+
+    var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
+    var body = json.decode(check.body);
+    var message = body['message'];
+    if (check.statusCode == 200) {
+      prefs.remove('checkin_id');
+      // Widget okButton = TextButton(
+      //   child: Text("Kembali ke Outlet"),
+      //   onPressed: () {
+      //     Navigator.pop(context, false);
+      //     Navigator.pop(context, false);
+      //     Navigator.pop(context, false);
+      //   },
+      // );
+
+      // AlertDialog alert = AlertDialog(
+      //   title: Text("Peringatan !"),
+      //   content: Text("$message"),
+      //   actions: [
+      //     okButton,
+      //   ],
+      // );
+
+      // showDialog(
+      //     context: context,
+      //     builder: (BuildContext context) {
+      //       return alert;
+      //     });
+    }
+  }
+
   checkin(latitude, longitude, check) async {
     if (check == false) {
       final prefs = await SharedPreferences.getInstance();
@@ -217,7 +214,6 @@ class _MapPageState extends State<MapPage> {
             okButton,
           ],
         );
-
         showDialog(
             context: context,
             builder: (BuildContext context) {
