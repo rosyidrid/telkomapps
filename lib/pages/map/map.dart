@@ -28,54 +28,52 @@ class UserLocation {
   final longitude;
 }
 
-class _MapPageState extends State<MapPage> {
-  late GoogleMapController _controller;
-  var long;
-  var lat;
-  double totalDistance = 0;
-  List<LatLng> _loc = [];
-  Set<Marker> markers = {};
+class LocationService {
   Location location = Location();
   StreamController<UserLocation> _locationController =
       StreamController<UserLocation>();
   Stream<UserLocation> get locationStream => _locationController.stream;
-  _MapPageState() {
-    location.requestService().then((value) {
-      location.serviceEnabled().then((value) {
-        location.requestPermission().then((value) {
-          if (value == PermissionStatus.granted) {
-            location.onLocationChanged.listen((value) {
-              if (value != null) {
-                _locationController.add(UserLocation(
-                    latitude: value.latitude, longitude: value.longitude));
-                // lat = value.latitude;
-                // long = value.longitude;
-                // _loc.add(LatLng(lat, long));
-                // _loc.add(LatLng(widget.latitude, widget.longitude));
-                // for (var i = 0; i < _loc.length - 1; i++) {
-                //   totalDistance = calculateDistance(
-                //       _loc[i].latitude,
-                //       _loc[i].longitude,
-                //       _loc[i + 1].latitude,
-                //       _loc[i + 1].longitude);
-                // }
-
-                checkin(value.latitude, value.longitude);
-                // print(totalDistance);
-                // if (totalDistance > 5.0) {
-                //   checkRadius();
-                // }
-              }
-            });
-          }
+  LocationService() {
+    if (!_locationController.isClosed) {
+      location.requestService().then((value) {
+        location.serviceEnabled().then((value) {
+          location.requestPermission().then((value) {
+            if (value == PermissionStatus.granted) {
+              location.onLocationChanged.listen((value) {
+                if (value != null) {
+                  _locationController.sink.add(UserLocation(
+                      latitude: value.latitude, longitude: value.longitude));
+                }
+              });
+            }
+          });
         });
       });
-    });
+    } else {
+      return;
+    }
   }
+
+  void dispose() => _locationController.close();
+  
+}
+
+class _MapPageState extends State<MapPage> {
+  late GoogleMapController _controller;
+  double totalDistance = 0;
+  List<LatLng> _loc = [];
+  Set<Marker> markers = {};
+  LocationService locationService = LocationService();
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    locationService.dispose();
+    super.dispose();
   }
 
   @override
@@ -98,7 +96,7 @@ class _MapPageState extends State<MapPage> {
         centerTitle: true,
       ),
       body: StreamBuilder<UserLocation>(
-          stream: locationStream,
+          stream: locationService.locationStream,
           builder: (_, snapshot) {
             if (snapshot.hasData) {
               markers.add(Marker(
@@ -111,6 +109,23 @@ class _MapPageState extends State<MapPage> {
                 position:
                     LatLng(snapshot.data!.latitude, snapshot.data!.longitude),
               ));
+              // lat = value.latitude;
+              // long = value.longitude;
+              // _loc.add(LatLng(lat, long));
+              // _loc.add(LatLng(widget.latitude, widget.longitude));
+              // for (var i = 0; i < _loc.length - 1; i++) {
+              //   totalDistance = calculateDistance(
+              //       _loc[i].latitude,
+              //       _loc[i].longitude,
+              //       _loc[i + 1].latitude,
+              //       _loc[i + 1].longitude);
+              // }
+
+              checkin(snapshot.data!.latitude, snapshot.data!.longitude);
+              // print(totalDistance);
+              // if (totalDistance > 5.0) {
+              //   checkRadius();
+              // }
             }
             return GoogleMap(
                 mapType: MapType.normal,
@@ -219,7 +234,6 @@ class _MapPageState extends State<MapPage> {
           builder: (BuildContext context) {
             return alert;
           });
-
     }
   }
 }
