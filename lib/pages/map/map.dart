@@ -33,6 +33,7 @@ class _MapPageState extends State<MapPage> {
   late GoogleMapController _controller;
   var long;
   var lat;
+  double totalDistance = 0;
   List<LatLng> _loc = [];
   Set<Marker> markers = {};
   Location location = Location();
@@ -48,22 +49,23 @@ class _MapPageState extends State<MapPage> {
               if (value != null) {
                 _locationController.add(UserLocation(
                     latitude: value.latitude, longitude: value.longitude));
-                lat = value.latitude;
-                long = value.longitude;
-                _loc.add(LatLng(lat, long));
-                _loc.add(LatLng(widget.latitude, widget.longitude));
-                for (var i = 0; i < _loc.length - 1; i++) {
-                  totalDistance = calculateDistance(
-                      _loc[i].latitude,
-                      _loc[i].longitude,
-                      _loc[i + 1].latitude,
-                      _loc[i + 1].longitude);
-                }
+                // lat = value.latitude;
+                // long = value.longitude;
+                // _loc.add(LatLng(lat, long));
+                // _loc.add(LatLng(widget.latitude, widget.longitude));
+                // for (var i = 0; i < _loc.length - 1; i++) {
+                //   totalDistance = calculateDistance(
+                //       _loc[i].latitude,
+                //       _loc[i].longitude,
+                //       _loc[i + 1].latitude,
+                //       _loc[i + 1].longitude);
+                // }
 
                 checkin(value.latitude, value.longitude);
-                if (totalDistance > 20.0) {
-                  checkRadius();
-                }
+                // print(totalDistance);
+                // if (totalDistance > 5.0) {
+                //   checkRadius();
+                // }
               }
             });
           }
@@ -71,13 +73,10 @@ class _MapPageState extends State<MapPage> {
       });
     });
   }
-  double totalDistance = 0;
-  bool check = false;
 
   @override
   void initState() {
     super.initState();
-    check = false;
     NotificationAPI.init();
   }
 
@@ -160,32 +159,32 @@ class _MapPageState extends State<MapPage> {
     var message = body['message'];
     if (check.statusCode == 200) {
       prefs.remove('checkin_id');
-      NotificationAPI.showNotification(title: 'Alert!', body: message);
-      Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => DashboardPage()),
-              (route) => false);
-      // Widget okButton = TextButton(
-      //   child: Text("Kembali ke Outlet"),
-      //   onPressed: () {
-      //     Navigator.pop(context, false);
-      //     Navigator.pop(context, false);
-      //     Navigator.pop(context, false);
-      //   },
-      // );
+      // NotificationAPI.showNotification(title: 'Alert!', body: message);
+      // Navigator.of(context).pushAndRemoveUntil(
+      //     MaterialPageRoute(builder: (context) => DashboardPage()),
+      //     (route) => false);
+      Widget okButton = TextButton(
+        child: Text("Kembali ke Outlet"),
+        onPressed: () {
+          Navigator.pop(context, false);
+          Navigator.pop(context, false);
+          Navigator.pop(context, false);
+        },
+      );
 
-      // AlertDialog alert = AlertDialog(
-      //   title: Text("Peringatan !"),
-      //   content: Text("$message"),
-      //   actions: [
-      //     okButton,
-      //   ],
-      // );
+      AlertDialog alert = AlertDialog(
+        title: Text("Peringatan !"),
+        content: Text("$message"),
+        actions: [
+          okButton,
+        ],
+      );
 
-      // showDialog(
-      //     context: context,
-      //     builder: (BuildContext context) {
-      //       return alert;
-      //     });
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
     }
   }
 
@@ -204,7 +203,7 @@ class _MapPageState extends State<MapPage> {
     if (checkin.statusCode == 200) {
       prefs.setInt('checkin_id', body['data']['id']);
       NotificationAPI.showNotification(title: 'Berhasil', body: message);
-      
+
       // Widget okButton = TextButton(
       //   child: Text("Tutup"),
       //   onPressed: () {
