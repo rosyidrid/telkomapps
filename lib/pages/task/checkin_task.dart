@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
+import 'package:telkom_apps/API/notification.dart';
 import 'package:telkom_apps/pages/dashboard/dashboard.dart';
 import 'package:telkom_apps/pages/map/map.dart';
 import 'package:telkom_apps/pages/photo/photo.dart';
@@ -55,6 +56,7 @@ class _TaskPageState extends State<TaskPage> {
   void initState() {
     startTime();
     super.initState();
+    NotificationAPI.init();
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:telkom_apps/API/notification.dart';
 import 'package:telkom_apps/pages/photo/camera.dart';
 
 class PhotoPage extends StatefulWidget {
@@ -10,6 +11,12 @@ class PhotoPage extends StatefulWidget {
 }
 
 class _PhotoPageState extends State<PhotoPage> {
+  @override
+  void initState(){
+    super.initState();
+    NotificationAPI.init();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

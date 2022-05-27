@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
+import 'package:telkom_apps/API/notification.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key, required this.id}) : super(key: key);
@@ -22,6 +23,12 @@ class _CameraPageState extends State<CameraPage> {
         enableAudio: false);
     status = false;
     await _controller.initialize();
+  }
+
+  @override
+  void initState(){
+    NotificationAPI.init();
+    super.initState();
   }
 
   @override

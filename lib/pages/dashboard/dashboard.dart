@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
+import 'package:telkom_apps/API/notification.dart';
 import 'package:telkom_apps/pages/dashboard/components/search.dart';
 import 'package:telkom_apps/pages/dashboard/components/user.dart';
 import 'package:telkom_apps/pages/login/login.dart';
@@ -16,6 +17,12 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  @override
+  void initState(){
+    super.initState();
+    NotificationAPI.init();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -38,37 +45,39 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Widget yesButton = TextButton(
-              child: Text(
-                "Yes",
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () {
-                Navigator.pop(context, false);
-                logOut();
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Color(0xFFFF4949),
-              ));
+          NotificationAPI.showNotification(
+          title: 'Notification', body: 'testing', payload: 'checkin');
+          // Widget yesButton = TextButton(
+          //     child: Text(
+          //       "Yes",
+          //       style: TextStyle(color: Colors.white),
+          //     ),
+          //     onPressed: () {
+          //       Navigator.pop(context, false);
+          //       logOut();
+          //     },
+          //     style: ElevatedButton.styleFrom(
+          //       primary: Color(0xFFFF4949),
+          //     ));
 
-          Widget noButton = TextButton(
-            child: Text("No", style: TextStyle(color: Colors.green)),
-            onPressed: () {
-              Navigator.pop(context, false);
-            },
-          );
+          // Widget noButton = TextButton(
+          //   child: Text("No", style: TextStyle(color: Colors.green)),
+          //   onPressed: () {
+          //     Navigator.pop(context, false);
+          //   },
+          // );
 
-          AlertDialog alert = AlertDialog(
-            title: Text("Peringatan !", style: TextStyle(color: Colors.red)),
-            content: Text("Apakah anda yakin ingin logout?"),
-            actions: [yesButton, noButton],
-          );
+          // AlertDialog alert = AlertDialog(
+          //   title: Text("Peringatan !", style: TextStyle(color: Colors.red)),
+          //   content: Text("Apakah anda yakin ingin logout?"),
+          //   actions: [yesButton, noButton],
+          // );
 
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return alert;
-              });
+          // showDialog(
+          //     context: context,
+          //     builder: (BuildContext context) {
+          //       return alert;
+          //     });
         },
         label: Text('Logout'),
         backgroundColor: Color(0xFFFF4949),
