@@ -12,9 +12,8 @@ class PhotoPage extends StatefulWidget {
 
 class _PhotoPageState extends State<PhotoPage> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    NotificationAPI.init();
   }
 
   @override

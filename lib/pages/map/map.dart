@@ -7,7 +7,6 @@ import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
 import 'package:telkom_apps/API/notification.dart';
-import 'package:telkom_apps/pages/dashboard/dashboard.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage(
@@ -77,7 +76,6 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    NotificationAPI.init();
   }
 
   @override
@@ -202,26 +200,25 @@ class _MapPageState extends State<MapPage> {
     var message = body['message'];
     if (checkin.statusCode == 200) {
       prefs.setInt('checkin_id', body['data']['id']);
-      NotificationAPI.showNotification(title: 'Berhasil', body: message);
 
-      // Widget okButton = TextButton(
-      //   child: Text("Tutup"),
-      //   onPressed: () {
-      //     Navigator.pop(context, false);
-      //   },
-      // );
-      // AlertDialog alert = AlertDialog(
-      //   title: Text("Berhasil"),
-      //   content: Text("$message"),
-      //   actions: [
-      //     okButton,
-      //   ],
-      // );
-      // showDialog(
-      //     context: context,
-      //     builder: (BuildContext context) {
-      //       return alert;
-      //     });
+      Widget okButton = TextButton(
+        child: Text("Tutup"),
+        onPressed: () {
+          Navigator.pop(context, false);
+        },
+      );
+      AlertDialog alert = AlertDialog(
+        title: Text("Berhasil"),
+        content: Text("$message"),
+        actions: [
+          okButton,
+        ],
+      );
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
 
     }
   }

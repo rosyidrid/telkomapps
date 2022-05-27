@@ -26,8 +26,7 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   @override
-  void initState(){
-    NotificationAPI.init();
+  void initState() {
     super.initState();
   }
 

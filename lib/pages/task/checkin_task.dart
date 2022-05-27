@@ -56,7 +56,6 @@ class _TaskPageState extends State<TaskPage> {
   void initState() {
     startTime();
     super.initState();
-    NotificationAPI.init();
   }
 
   @override
@@ -255,13 +254,19 @@ class _TaskPageState extends State<TaskPage> {
             fontWeight: FontWeight.bold));
   }
 
-  resetData() async {
+  Future resetData() async {
     final prefs = await SharedPreferences.getInstance();
+
     var token = prefs.get('token');
     var id = prefs.get('checkin_id');
-    var data = {'checkin_id': id};
-    var reset = CallAPI().checkRadius(token, 'checkin/out-radius', data);
-    if (reset.statusCode == 200) {
+    var data = {
+      "checkin_id": id,
+    };
+
+    var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
+    var body = json.decode(check.body);
+    var message = body['message'];
+    if (check.statusCode == 200) {
       prefs.remove('checkin_id');
     }
   }
