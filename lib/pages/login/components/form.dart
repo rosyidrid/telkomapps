@@ -147,6 +147,12 @@ class _FormPageState extends State<FormPage> {
       //jika iya maka
       //token akan di simpan di localstorage
       prefs.setString('token', bodyLogin['data']['token']);
+      var token = prefs.get('token');
+      var user = await CallAPI().getDataUser(token, 'user');
+      var bodyUser = json.decode(user.body);
+      if (user.statusCode == 200) {
+        prefs.setString('name', bodyUser['data']['name']);
+      }
       //setelah di simpen di localstorage
       //page berganti kehalaman dashboard
       Navigator.of(context).pushReplacement(

@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:telkom_apps/API/api.dart';
 
 class User extends StatefulWidget {
   const User({Key? key}) : super(key: key);
@@ -18,15 +15,15 @@ class _UserState extends State<User> {
     return Container(
         width: size.width * .8,
         child: FutureBuilder(
-          future: getUser(),
-          builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+          future: getName(),
+          builder: (context, snapshot) {
             return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Icon(Icons.account_circle_rounded,
                       color: Colors.white, size: 60),
                   Flexible(
-                      child: Text("${snapshot.data?['name']}",
+                      child: Text("${snapshot.data}",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -37,13 +34,9 @@ class _UserState extends State<User> {
   }
 
   //function mengambil data user
-  Future<Map<String, dynamic>> getUser() async {
+  Future getName() async {
     final prefs = await SharedPreferences.getInstance();
-    var token = prefs.get("token"); //mengambil token
-    var dataUser =
-        await CallAPI().getDataUser(token, 'user'); //mengambil data user
-    var user = json.decode(dataUser.body)["data"]
-        as Map<String, dynamic>; //mengubah data user menjadi map
-    return user; //mengembalikan data user
+    var name = prefs.getString('name');
+    return name;
   }
 }

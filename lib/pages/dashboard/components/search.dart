@@ -14,6 +14,9 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   TextEditingController pjp = new TextEditingController();
   TextEditingController nama_outlet = new TextEditingController();
+  var data = [];
+  List<Container> array = [];
+  var filterData = [];
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -78,6 +81,8 @@ class _SearchState extends State<Search> {
               ),
               ElevatedButton(
                 onPressed: () {
+                  array = [];
+                  _search();
                   FocusScope.of(context).unfocus();
                 },
                 child: Text(
@@ -95,91 +100,19 @@ class _SearchState extends State<Search> {
             ],
           ),
         ),
-        FutureBuilder(
-            future: _search(),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  heightFactor: 8,
-                  child: CircularProgressIndicator(color: Color(0xFFFF4949)),
-                );
-              }
-              List<Container> array = [];
-              if (snapshot.data != null) {
-                for (var i = 0; i < snapshot.data.length; i++) {
-                  var content = Container(
-                    width: MediaQuery.of(context).size.width * .8,
-                    padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    OutletPage(outlet: snapshot.data[i])));
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                              "${snapshot.data[i]['outlet_id']} - ${snapshot.data[i]['namaoutlet']}",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              )),
-                          Row(
-                            children: <Widget>[
-                              Icon(Icons.location_on,
-                                  color: Colors.grey, size: 14),
-                              Text(" ${snapshot.data[i]['kota']}",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                  )),
-                            ],
-                          )
-                        ],
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          minimumSize:
-                              Size(MediaQuery.of(context).size.width, 100)),
-                    ),
-                  );
-                  array.add(content);
-                }
-
-                if (snapshot.data.length == 0) {
-                  return Container(
-                    margin: EdgeInsets.only(top: 40),
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.search_off, color: Colors.grey, size: 60),
-                        Text(
-                          "Tidak ada data",
-                        )
-                      ],
-                    ),
-                  );
-                }
-              } else {
-                return Container(
-                  margin: EdgeInsets.only(top: 40),
-                  child: Column(
-                    children: <Widget>[
-                      Icon(Icons.signal_wifi_bad_outlined,
-                          color: Color.fromARGB(255, 235, 2, 2), size: 40),
-                      Text(
-                        "No Connection\nPlease turn on your data",
-                        textAlign: TextAlign.center,
-                      )
-                    ],
-                  ),
-                );
-              }
-
-              return Column(
+        filterData.length == 0
+            ? Container(
+                margin: EdgeInsets.only(top: 40),
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.search_off, color: Colors.grey, size: 60),
+                    Text(
+                      "Tidak ada data",
+                    )
+                  ],
+                ),
+              )
+            : Column(
                 children: <Widget>[
                   Text("Hasil Pencarian : ",
                       style:
@@ -188,23 +121,21 @@ class _SearchState extends State<Search> {
                     children: array,
                   )
                 ],
-              );
-            })
+              )
       ],
     );
   }
 
-  Future _search() async {
+  _search() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.get('token');
     var url = 'detail-data/';
     var search = await CallAPI().getDataOutletPJP(token, url);
     var body = json.decode(search.body);
-    var data = [];
+    data = [];
     for (var i in body['data']) {
       data.add(i);
     }
-    var filterData;
     if (pjp.text != "") {
       filterData = data
           .where(
@@ -212,11 +143,54 @@ class _SearchState extends State<Search> {
           .toList();
     } else {
       filterData = data
-          .where((element) =>
-              element['namaoutlet'].toString().toLowerCase() ==
-              nama_outlet.text)
+          .where((element) => element['namaoutlet']
+              .toString()
+              .toLowerCase()
+              .contains(nama_outlet.text))
           .toList();
     }
-    return filterData;
+
+    setState(() {
+      for (var i = 0; i < filterData.length; i++) {
+        var content = Container(
+          width: MediaQuery.of(context).size.width * .8,
+          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OutletPage(outlet: filterData[i])));
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                    "${filterData[i]['outlet_id']} - ${filterData[i]['namaoutlet']}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    )),
+                Row(
+                  children: <Widget>[
+                    Icon(Icons.location_on, color: Colors.grey, size: 14),
+                    Text(" ${filterData[i]['kota']}",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        )),
+                  ],
+                )
+              ],
+            ),
+            style: ElevatedButton.styleFrom(
+                primary: Colors.white,
+                minimumSize: Size(MediaQuery.of(context).size.width, 100)),
+          ),
+        );
+        array.add(content);
+      }
+    });
   }
 }
