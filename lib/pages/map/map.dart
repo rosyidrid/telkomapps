@@ -42,7 +42,6 @@ class LocationService {
                 if (!_locationController.isClosed) {
                   _locationController.add(UserLocation(
                       latitude: value.latitude, longitude: value.longitude));
-                  print(value);
                 }
               }
             });
@@ -71,7 +70,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     locationService.dispose();
   }

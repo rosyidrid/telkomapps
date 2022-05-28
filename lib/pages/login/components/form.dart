@@ -58,6 +58,7 @@ class _FormPageState extends State<FormPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     TextField(
+                      textInputAction: TextInputAction.next,
                       controller: username,
                       decoration: InputDecoration(
                         icon: Icon(Icons.person, color: Color(0xFFFF4949)),
@@ -81,6 +82,7 @@ class _FormPageState extends State<FormPage> {
                       endIndent: 10,
                     ),
                     TextField(
+                      textInputAction: TextInputAction.next,
                       controller: password,
                       obscureText: pass,
                       decoration: InputDecoration(
