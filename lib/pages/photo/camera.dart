@@ -20,7 +20,6 @@ class _CameraPageState extends State<CameraPage> {
     var camera = await availableCameras();
     _controller = CameraController(camera[index], ResolutionPreset.max,
         enableAudio: false);
-    status = false;
     await _controller.initialize();
   }
 
@@ -80,7 +79,7 @@ class _CameraPageState extends State<CameraPage> {
                                   try {
                                     final image =
                                         await _controller.takePicture();
-                                    await Navigator.of(context).pushReplacement(
+                                    await Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => DisplayPictureScreen(
                                             // Pass the automatically generated path to
@@ -97,18 +96,16 @@ class _CameraPageState extends State<CameraPage> {
                                 child: const Icon(Icons.camera_alt),
                               ),
                               ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      if (status == false) {
-                                        _controller
-                                            .setFlashMode(FlashMode.always);
-                                        status = true;
-                                      } else {
-                                        _controller.setFlashMode(FlashMode.off);
-                                        status = false;
-                                      }
-                                      print(status);
-                                    });
+                                  onPressed: () async {
+                                    if (status == false) {
+                                      await _controller
+                                          .setFlashMode(FlashMode.always);
+                                      status = true;
+                                    } else {
+                                      await _controller
+                                          .setFlashMode(FlashMode.off);
+                                      status = false;
+                                    }
                                   },
                                   child: status == true
                                       ? Icon(Icons.flash_on_rounded)

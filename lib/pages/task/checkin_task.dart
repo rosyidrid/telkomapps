@@ -304,9 +304,11 @@ class _TaskPageState extends State<TaskPage> {
           });
     } else {
       Widget okButton = TextButton(
-        child: Text("Close"),
+        child: Text("Back to Dashboard"),
         onPressed: () {
-          Navigator.pop(context, false);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => DashboardPage()),
+              (route) => false);
         },
       );
       AlertDialog alert = AlertDialog(
