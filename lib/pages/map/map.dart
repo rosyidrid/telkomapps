@@ -145,154 +145,203 @@ class _MapPageState extends State<MapPage> {
           position: LatLng(widget.latitude, widget.longitude),
           icon: BitmapDescriptor.defaultMarker),
     );
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xFFFF4949),
-          title: Text(
-            'Lihat Peta',
+    return WillPopScope(
+        onWillPop: () async {
+          bool willLeave = false;
+          await showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                      title: const Text("Peringatan !",
+                          style: TextStyle(color: Colors.red)),
+                      content: const Text(
+                          'Keluar dari page ini akan menyebabkan reset terhadap waktu anda\n\nLanjut keluar?'),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () {
+                              resetData();
+                              willLeave = true;
+                              Navigator.pop(context, true);
+                            },
+                            child: const Text('Yes'),
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFFFF4949),
+                            )),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context, false);
+                          },
+                          child: const Text('No',
+                              style: TextStyle(color: Colors.green)),
+                        )
+                      ]));
+          return willLeave;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color(0xFFFF4949),
+            title: Text(
+              'Lihat Peta',
+            ),
+            centerTitle: true,
           ),
-          centerTitle: true,
-        
-      ),
-      body: Column(children: <Widget>[
-        Container(
-          height: size.height / 3,
-          child: GoogleMap(
-              mapType: MapType.normal,
-              circles: Set.from([
-                Circle(
-                    circleId: CircleId('Outlet'),
-                    center: LatLng(widget.latitude, widget.longitude),
-                    radius: 20,
-                    fillColor: Color.fromARGB(82, 138, 138, 138),
-                    strokeColor: Colors.red,
-                    strokeWidth: 1)
-              ]),
-              markers: markers,
-              myLocationButtonEnabled: false,
-              zoomControlsEnabled: false,
-              onMapCreated: (controller) => _controller = controller,
-              initialCameraPosition: CameraPosition(
-                  target: LatLng(widget.latitude, widget.longitude),
-                  zoom: 18.5)),
-        ),
-        Container(
-          padding: EdgeInsets.only(top: 15, bottom: 15),
-          child: buildTime(),
-        ),
-        Expanded(
-            child: Container(
-          width: size.width * 0.8,
-          child: ListView(
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PhotoPage(id: 1)));
-                },
-                child: Text(
-                  "Ambil Foto di Outlet",
-                  style: TextStyle(
-                    fontSize: 14,
+          body: Column(children: <Widget>[
+            Container(
+              height: size.height / 3,
+              child: GoogleMap(
+                  mapType: MapType.normal,
+                  circles: Set.from([
+                    Circle(
+                        circleId: CircleId('Outlet'),
+                        center: LatLng(widget.latitude, widget.longitude),
+                        radius: 20,
+                        fillColor: Color.fromARGB(82, 138, 138, 138),
+                        strokeColor: Colors.red,
+                        strokeWidth: 1)
+                  ]),
+                  markers: markers,
+                  myLocationButtonEnabled: false,
+                  zoomControlsEnabled: false,
+                  onMapCreated: (controller) => _controller = controller,
+                  initialCameraPosition: CameraPosition(
+                      target: LatLng(widget.latitude, widget.longitude),
+                      zoom: 18.5)),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 15, bottom: 15),
+              child: buildTime(),
+            ),
+            Expanded(
+                child: Container(
+              width: size.width * 0.8,
+              child: ListView(
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PhotoPage(id: 1)));
+                    },
+                    child: Text(
+                      "Ambil Foto di Outlet",
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(size.width * 0.8, 50),
+                        primary: Color(0xFFFF4949),
+                        textStyle: TextStyle(fontWeight: FontWeight.w700)),
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(size.width * 0.8, 50),
-                    primary: Color(0xFFFF4949),
-                    textStyle: TextStyle(fontWeight: FontWeight.w700)),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PhotoPage(id: 2)));
-                },
-                child: Text(
-                  "Ambil Foto Stok Digipos",
-                  style: TextStyle(
-                    fontSize: 14,
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(size.width * 0.8, 50),
-                    primary: Color(0xFFFF4949),
-                    textStyle: TextStyle(fontWeight: FontWeight.w700)),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PhotoPage(id: 3)));
-                },
-                child: Text(
-                  "Ambil Foto Nota Penjualan",
-                  style: TextStyle(
-                    fontSize: 14,
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PhotoPage(id: 2)));
+                    },
+                    child: Text(
+                      "Ambil Foto Stok Digipos",
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(size.width * 0.8, 50),
+                        primary: Color(0xFFFF4949),
+                        textStyle: TextStyle(fontWeight: FontWeight.w700)),
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(size.width * 0.8, 50),
-                    primary: Color(0xFFFF4949),
-                    textStyle: TextStyle(fontWeight: FontWeight.w700)),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PhotoPage(id: 4)));
-                },
-                child: Text(
-                  "Ambil Foto Promo Comp",
-                  style: TextStyle(
-                    fontSize: 14,
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(size.width * 0.8, 50),
-                    primary: Color(0xFFFF4949),
-                    textStyle: TextStyle(fontWeight: FontWeight.w700)),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PhotoPage(id: 5)));
-                },
-                child: Text(
-                  "Ambil Foto Harga EUP",
-                  style: TextStyle(
-                    fontSize: 14,
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PhotoPage(id: 3)));
+                    },
+                    child: Text(
+                      "Ambil Foto Nota Penjualan",
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(size.width * 0.8, 50),
+                        primary: Color(0xFFFF4949),
+                        textStyle: TextStyle(fontWeight: FontWeight.w700)),
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(size.width * 0.8, 50),
-                    primary: Color(0xFFFF4949),
-                    textStyle: TextStyle(fontWeight: FontWeight.w700)),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PhotoPage(id: 4)));
+                    },
+                    child: Text(
+                      "Ambil Foto Promo Comp",
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(size.width * 0.8, 50),
+                        primary: Color(0xFFFF4949),
+                        textStyle: TextStyle(fontWeight: FontWeight.w700)),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PhotoPage(id: 5)));
+                    },
+                    child: Text(
+                      "Ambil Foto Harga EUP",
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(size.width * 0.8, 50),
+                        primary: Color(0xFFFF4949),
+                        textStyle: TextStyle(fontWeight: FontWeight.w700)),
+                  ),
+                  SizedBox(
+                    height: 25,
+                  )
+                ],
               ),
-              SizedBox(height: 25,)
-            ],
-          ),
-        ))
-      ]),
-    );
+            ))
+          ]),
+        ));
+  }
+
+  Future resetData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.get('token');
+    var id = prefs.get('checkin_id');
+    var data = {
+      "checkin_id": id,
+    };
+
+    var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
+    var body = json.decode(check.body);
+    var message = body['message'];
+    if (check.statusCode == 200) {
+      prefs.remove('checkin_id');
+    }
   }
 
   Widget buildTime() {
