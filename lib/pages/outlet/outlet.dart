@@ -61,7 +61,7 @@ class _OutletPageState extends State<OutletPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => TaskPage(
-                                outletId: widget.outlet['outlet_id'],
+                                outletid: widget.outlet['outlet_id'],
                                 latitude: widget.outlet['latitude'],
                                 longitude: widget.outlet['longitude']),
                           ));

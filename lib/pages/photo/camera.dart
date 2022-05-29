@@ -54,6 +54,7 @@ class _CameraPageState extends State<CameraPage> {
                     child: CameraPreview(_controller),
                   ),
                   Container(
+                      padding: EdgeInsets.only(bottom: 25),
                       alignment: Alignment.bottomCenter,
                       width: MediaQuery.of(context).size.width,
                       child: Row(
@@ -201,9 +202,8 @@ class DisplayPictureScreen extends StatelessWidget {
     var message = body['message'];
     if (upload.statusCode == 200) {
       Widget okButton = TextButton(
-        child: Text("Kembali ke Task"),
+        child: Text("Close"),
         onPressed: () {
-          Navigator.pop(context, false);
           Navigator.pop(context, false);
           Navigator.pop(context, false);
           Navigator.pop(context, false);
@@ -218,6 +218,7 @@ class DisplayPictureScreen extends StatelessWidget {
       );
 
       showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return alert;
@@ -238,6 +239,7 @@ class DisplayPictureScreen extends StatelessWidget {
       );
 
       showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return alert;
