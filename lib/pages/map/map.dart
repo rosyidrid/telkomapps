@@ -100,6 +100,7 @@ class _MapPageState extends State<MapPage> {
       setState(() {
         lat = event.latitude;
         long = event.longitude;
+
         markers.add(Marker(
           icon:
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
@@ -117,7 +118,7 @@ class _MapPageState extends State<MapPage> {
         }
         if (check == false) {
           if (totalDistance < 20.0) {
-            checkin(event.latitude, event.longitude, check);
+            checkin(lat, lat, check);
             check = true;
           }
         }
@@ -145,12 +146,13 @@ class _MapPageState extends State<MapPage> {
           icon: BitmapDescriptor.defaultMarker),
     );
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFFF4949),
-        title: Text(
-          'Lihat Peta',
-        ),
-        centerTitle: true,
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFF4949),
+          title: Text(
+            'Lihat Peta',
+          ),
+          centerTitle: true,
+        
       ),
       body: Column(children: <Widget>[
         Container(
