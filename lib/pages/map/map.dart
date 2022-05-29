@@ -67,6 +67,34 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     check = false;
+    locationService.locationStream.listen((value) {
+      setState(() {
+        lat = value.latitude;
+        long = value.longitude;
+        markers.add(Marker(
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+          markerId: MarkerId('User'),
+          infoWindow: InfoWindow(
+            title: 'User',
+          ),
+          position: LatLng(lat, long),
+        ));
+
+        _loc.add(LatLng(lat, long));
+        _loc.add(LatLng(widget.latitude, widget.longitude));
+        for (var i = 0; i < _loc.length - 1; i++) {
+          totalDistance = calculateDistance(_loc[i].latitude, _loc[i].longitude,
+              _loc[i + 1].latitude, _loc[i + 1].longitude);
+        }
+        if (check == false) {
+          if (totalDistance < 20.0) {
+            checkin(lat, long, check);
+            check = true;
+          }
+        }
+      });
+    });
   }
 
   @override
@@ -87,66 +115,30 @@ class _MapPageState extends State<MapPage> {
           icon: BitmapDescriptor.defaultMarker),
     );
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFFF4949),
-        title: Text(
-          'Lihat Peta',
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFF4949),
+          title: Text(
+            'Lihat Peta',
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: StreamBuilder<UserLocation>(
-          stream: locationService.locationStream,
-          builder: (_, snapshot) {
-            if (snapshot.hasData) {
-              markers.add(Marker(
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueAzure),
-                markerId: MarkerId('User'),
-                infoWindow: InfoWindow(
-                  title: 'User',
-                ),
-                position:
-                    LatLng(snapshot.data!.latitude, snapshot.data!.longitude),
-              ));
-              lat = snapshot.data!.latitude;
-              long = snapshot.data!.longitude;
-              _loc.add(LatLng(lat, long));
-              _loc.add(LatLng(widget.latitude, widget.longitude));
-              for (var i = 0; i < _loc.length - 1; i++) {
-                totalDistance = calculateDistance(
-                    _loc[i].latitude,
-                    _loc[i].longitude,
-                    _loc[i + 1].latitude,
-                    _loc[i + 1].longitude);
-              }
-              if (check == false) {
-                if (totalDistance < 20.0) {
-                  checkin(
-                      snapshot.data!.latitude, snapshot.data!.longitude, check);
-                  check = true;
-                }
-              }
-            }
-            return GoogleMap(
-                mapType: MapType.normal,
-                circles: Set.from([
-                  Circle(
-                      circleId: CircleId('Outlet'),
-                      center: LatLng(widget.latitude, widget.longitude),
-                      radius: 20,
-                      fillColor: Color.fromARGB(82, 138, 138, 138),
-                      strokeColor: Colors.red,
-                      strokeWidth: 1)
-                ]),
-                markers: markers,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: false,
-                onMapCreated: (controller) => _controller = controller,
-                initialCameraPosition: CameraPosition(
-                    target: LatLng(widget.latitude, widget.longitude),
-                    zoom: 19));
-          }),
-    );
+        body: GoogleMap(
+            mapType: MapType.normal,
+            circles: Set.from([
+              Circle(
+                  circleId: CircleId('Outlet'),
+                  center: LatLng(widget.latitude, widget.longitude),
+                  radius: 20,
+                  fillColor: Color.fromARGB(82, 138, 138, 138),
+                  strokeColor: Colors.red,
+                  strokeWidth: 1)
+            ]),
+            markers: markers,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
+            onMapCreated: (controller) => _controller = controller,
+            initialCameraPosition: CameraPosition(
+                target: LatLng(widget.latitude, widget.longitude), zoom: 19)));
   }
 
   double calculateDistance(lat1, lon1, lat2, lon2) {
