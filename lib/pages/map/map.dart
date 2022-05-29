@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
+import 'package:telkom_apps/pages/photo/photo.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage(
@@ -62,21 +63,78 @@ class _MapPageState extends State<MapPage> {
   var lat;
   var long;
   bool check = false;
+  static const maxSeconds = 59;
+  static const maxMinute = 19;
+  int seconds = maxSeconds;
+  int minute = maxMinute;
+  Timer? timer;
+  void startTime() {
+    timer = Timer.periodic(Duration(seconds: 1), (_) {
+      if (seconds > 0) {
+        setState(() {
+          seconds--;
+        });
+        if (seconds == 0) {
+          if (minute > 0) {
+            setState(() {
+              minute--;
+            });
+            seconds = maxSeconds;
+          }
+        }
+      } else {
+        setState(() {
+          timer?.cancel();
+          // _checkout();
+        });
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     check = false;
+    startTime();
+    locationService.locationStream.listen((event) {
+      setState(() {
+        lat = event.latitude;
+        long = event.longitude;
+        markers.add(Marker(
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+          markerId: MarkerId('User'),
+          infoWindow: InfoWindow(
+            title: 'User',
+          ),
+          position: LatLng(lat, long),
+        ));
+        _loc.add(LatLng(lat, long));
+        _loc.add(LatLng(widget.latitude, widget.longitude));
+        for (var i = 0; i < _loc.length - 1; i++) {
+          totalDistance = calculateDistance(_loc[i].latitude, _loc[i].longitude,
+              _loc[i + 1].latitude, _loc[i + 1].longitude);
+        }
+        if (check == false) {
+          if (totalDistance < 20.0) {
+            checkin(event.latitude, event.longitude, check);
+            check = true;
+          }
+        }
+      });
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
+    timer?.cancel();
     locationService.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     markers.add(
       Marker(
           infoWindow: InfoWindow(
@@ -94,58 +152,156 @@ class _MapPageState extends State<MapPage> {
         ),
         centerTitle: true,
       ),
-      body: StreamBuilder<UserLocation>(
-          stream: locationService.locationStream,
-          builder: (_, snapshot) {
-            if (snapshot.hasData) {
-              markers.add(Marker(
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueAzure),
-                markerId: MarkerId('User'),
-                infoWindow: InfoWindow(
-                  title: 'User',
+      body: Column(children: <Widget>[
+        Container(
+          height: size.height / 3,
+          child: GoogleMap(
+              mapType: MapType.normal,
+              circles: Set.from([
+                Circle(
+                    circleId: CircleId('Outlet'),
+                    center: LatLng(widget.latitude, widget.longitude),
+                    radius: 20,
+                    fillColor: Color.fromARGB(82, 138, 138, 138),
+                    strokeColor: Colors.red,
+                    strokeWidth: 1)
+              ]),
+              markers: markers,
+              myLocationButtonEnabled: false,
+              zoomControlsEnabled: false,
+              onMapCreated: (controller) => _controller = controller,
+              initialCameraPosition: CameraPosition(
+                  target: LatLng(widget.latitude, widget.longitude),
+                  zoom: 18.5)),
+        ),
+        Container(
+          padding: EdgeInsets.only(top: 15, bottom: 15),
+          child: buildTime(),
+        ),
+        Expanded(
+            child: Container(
+          width: size.width * 0.8,
+          child: ListView(
+            children: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PhotoPage(id: 1)));
+                },
+                child: Text(
+                  "Ambil Foto di Outlet",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
                 ),
-                position:
-                    LatLng(snapshot.data!.latitude, snapshot.data!.longitude),
-              ));
-              lat = snapshot.data!.latitude;
-              long = snapshot.data!.longitude;
-              _loc.add(LatLng(lat, long));
-              _loc.add(LatLng(widget.latitude, widget.longitude));
-              for (var i = 0; i < _loc.length - 1; i++) {
-                totalDistance = calculateDistance(
-                    _loc[i].latitude,
-                    _loc[i].longitude,
-                    _loc[i + 1].latitude,
-                    _loc[i + 1].longitude);
-              }
-              if (check == false) {
-                if (totalDistance < 20.0) {
-                  checkin(
-                      snapshot.data!.latitude, snapshot.data!.longitude, check);
-                  check = true;
-                }
-              }
-            }
-            return GoogleMap(
-                mapType: MapType.normal,
-                circles: Set.from([
-                  Circle(
-                      circleId: CircleId('Outlet'),
-                      center: LatLng(widget.latitude, widget.longitude),
-                      radius: 20,
-                      fillColor: Color.fromARGB(82, 138, 138, 138),
-                      strokeColor: Colors.red,
-                      strokeWidth: 1)
-                ]),
-                markers: markers,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: false,
-                onMapCreated: (controller) => _controller = controller,
-                initialCameraPosition: CameraPosition(
-                    target: LatLng(widget.latitude, widget.longitude),
-                    zoom: 19));
-          }),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(size.width * 0.8, 50),
+                    primary: Color(0xFFFF4949),
+                    textStyle: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PhotoPage(id: 2)));
+                },
+                child: Text(
+                  "Ambil Foto Stok Digipos",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(size.width * 0.8, 50),
+                    primary: Color(0xFFFF4949),
+                    textStyle: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PhotoPage(id: 3)));
+                },
+                child: Text(
+                  "Ambil Foto Nota Penjualan",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(size.width * 0.8, 50),
+                    primary: Color(0xFFFF4949),
+                    textStyle: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PhotoPage(id: 4)));
+                },
+                child: Text(
+                  "Ambil Foto Promo Comp",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(size.width * 0.8, 50),
+                    primary: Color(0xFFFF4949),
+                    textStyle: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PhotoPage(id: 5)));
+                },
+                child: Text(
+                  "Ambil Foto Harga EUP",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(size.width * 0.8, 50),
+                    primary: Color(0xFFFF4949),
+                    textStyle: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+              SizedBox(height: 25,)
+            ],
+          ),
+        ))
+      ]),
+    );
+  }
+
+  Widget buildTime() {
+    return Container(
+      alignment: Alignment.topCenter,
+      padding: EdgeInsets.only(top: 15, bottom: 15),
+      child: Text('$minute : $seconds',
+          style: TextStyle(
+              color: Color(0xFFFF4949),
+              fontSize: 24,
+              fontWeight: FontWeight.bold)),
     );
   }
 

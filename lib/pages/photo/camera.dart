@@ -48,75 +48,70 @@ class _CameraPageState extends State<CameraPage> {
           builder: (context, snapshot) => (snapshot.connectionState ==
                   ConnectionState.done)
               ? Stack(children: [
-                  Column(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.8,
-                        width: MediaQuery.of(context).size.width,
-                        child: CameraPreview(_controller),
-                      ),
-                      Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      if (index == 0) {
-                                        index = 1;
-                                      } else {
-                                        index--;
-                                      }
-                                    });
-                                  },
-                                  child: Icon(Icons.flip_camera_ios),
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Color.fromARGB(0, 0, 0, 0),
-                                  )),
-                              FloatingActionButton(
-                                onPressed: () async {
-                                  try {
-                                    final image =
-                                        await _controller.takePicture();
-                                    await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => DisplayPictureScreen(
-                                            // Pass the automatically generated path to
-                                            // the DisplayPictureScreen widget.
-                                            imagePath: image.path,
-                                            id: widget.id),
-                                      ),
-                                    );
-                                  } catch (e) {
-                                    print(e);
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    width: MediaQuery.of(context).size.width,
+                    child: CameraPreview(_controller),
+                  ),
+                  Container(
+                      alignment: Alignment.bottomCenter,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (index == 0) {
+                                    index = 1;
+                                  } else {
+                                    index--;
                                   }
-                                },
-                                backgroundColor: Color(0xFFFF4949),
-                                child: const Icon(Icons.camera_alt),
-                              ),
-                              ElevatedButton(
-                                  onPressed: () async {
-                                    if (status == false) {
-                                      await _controller
-                                          .setFlashMode(FlashMode.always);
-                                      status = true;
-                                    } else {
-                                      await _controller
-                                          .setFlashMode(FlashMode.off);
-                                      status = false;
-                                    }
-                                  },
-                                  child: status == true
-                                      ? Icon(Icons.flash_on_rounded)
-                                      : Icon(Icons.flash_off_rounded),
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Color.fromARGB(0, 0, 0, 0),
-                                  )),
-                            ],
-                          )),
-                    ],
-                  )
+                                });
+                              },
+                              child: Icon(Icons.flip_camera_ios),
+                              style: ElevatedButton.styleFrom(
+                                primary: Color.fromARGB(0, 0, 0, 0),
+                              )),
+                          FloatingActionButton(
+                            onPressed: () async {
+                              try {
+                                final image = await _controller.takePicture();
+                                await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => DisplayPictureScreen(
+                                        // Pass the automatically generated path to
+                                        // the DisplayPictureScreen widget.
+                                        imagePath: image.path,
+                                        id: widget.id),
+                                  ),
+                                );
+                              } catch (e) {
+                                print(e);
+                              }
+                            },
+                            backgroundColor: Color(0xFFFF4949),
+                            child: const Icon(Icons.camera_alt),
+                          ),
+                          ElevatedButton(
+                              onPressed: () async {
+                                if (status == false) {
+                                  await _controller
+                                      .setFlashMode(FlashMode.always);
+                                  status = true;
+                                } else {
+                                  await _controller.setFlashMode(FlashMode.off);
+                                  status = false;
+                                }
+                              },
+                              child: status == true
+                                  ? Icon(Icons.flash_on_rounded)
+                                  : Icon(Icons.flash_off_rounded),
+                              style: ElevatedButton.styleFrom(
+                                primary: Color.fromARGB(0, 0, 0, 0),
+                              )),
+                        ],
+                      )),
                 ])
               : Center(
                   child: CircularProgressIndicator(),
@@ -138,30 +133,44 @@ class DisplayPictureScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFFF4949),
-        title: Text('Hasil Foto'),
-        centerTitle: true,
-      ),
-      body: Container(
-        width: size.width,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Image.file(File(imagePath), height: size.height * .6),
-              ElevatedButton(
-                onPressed: () {
-                  _upload(context);
-                },
-                child: Text("Upload Foto"),
-                style: ElevatedButton.styleFrom(
-                  primary: Color(0xFFFF4949),
-                  minimumSize: Size(size.width * 0.8, 40),
-                ),
-              )
-            ]),
-      ),
-    );
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFF4949),
+          title: Text('Hasil Foto'),
+          centerTitle: true,
+        ),
+        body: Container(
+          alignment: Alignment.center,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Image.file(File(imagePath), height: size.height * .6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context, false);
+                      },
+                      child: Text("Ambil Ulang"),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFFFF4949),
+                        minimumSize: Size(size.width * 0.2, 40),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _upload(context);
+                      },
+                      child: Text("Upload Foto"),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFFFF4949),
+                        minimumSize: Size(size.width * 0.2, 40),
+                      ),
+                    )
+                  ],
+                )
+              ]),
+        ));
   }
 
   Future _upload(context) async {
@@ -192,8 +201,9 @@ class DisplayPictureScreen extends StatelessWidget {
     var message = body['message'];
     if (upload.statusCode == 200) {
       Widget okButton = TextButton(
-        child: Text("Close"),
+        child: Text("Kembali ke Task"),
         onPressed: () {
+          Navigator.pop(context, false);
           Navigator.pop(context, false);
           Navigator.pop(context, false);
           Navigator.pop(context, false);
@@ -214,7 +224,7 @@ class DisplayPictureScreen extends StatelessWidget {
           });
     } else {
       Widget okButton = TextButton(
-        child: Text("Tutup"),
+        child: Text("Close"),
         onPressed: () {
           Navigator.pop(context, false);
         },
