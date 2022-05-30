@@ -204,9 +204,10 @@ class DisplayPictureScreen extends StatelessWidget {
       Widget okButton = TextButton(
         child: Text("Close"),
         onPressed: () {
-          Navigator.pop(context, false);
-          Navigator.pop(context, false);
-          Navigator.pop(context, false);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
         },
       );
       AlertDialog alert = AlertDialog(

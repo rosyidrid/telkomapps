@@ -56,7 +56,7 @@ class LocationService {
   void dispose() => _locationController.close();
 }
 
-class _TaskPageState extends State<TaskPage> {
+class _TaskPageState extends State<TaskPage> with WidgetsBindingObserver {
   late GoogleMapController _controller;
   double totalDistance = 0;
   List<LatLng> _loc = [];
@@ -66,7 +66,7 @@ class _TaskPageState extends State<TaskPage> {
   var long;
   bool check = false;
   static const maxSeconds = 59;
-  static const maxMinute = 19;
+  static const maxMinute = 14;
   int seconds = maxSeconds;
   int minute = maxMinute;
   Timer? timer;
@@ -94,11 +94,16 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.inactive) {}
+  }
+
+  @override
   void initState() {
     super.initState();
     NotificationAPI.init();
     check = false;
-    startTime();
+    WidgetsBinding.instance.addObserver(this);
     locationService.locationStream.listen((event) {
       setState(() {
         lat = event.latitude;
@@ -132,9 +137,9 @@ class _TaskPageState extends State<TaskPage> {
 
         if (totalDistance > 20.0) {
           setState(() {
-            checkRadius();
-            timer?.cancel();
-            locationService.dispose();
+            if (check == true) {
+              checkRadius();
+            }
           });
         }
       });
@@ -145,6 +150,7 @@ class _TaskPageState extends State<TaskPage> {
   void dispose() {
     super.dispose();
     timer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     locationService.dispose();
     _controller.dispose();
   }
@@ -398,6 +404,8 @@ class _TaskPageState extends State<TaskPage> {
       Widget okButton = TextButton(
         child: Text("Kembali ke Dashboard"),
         onPressed: () {
+          timer?.cancel();
+          locationService.dispose();
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => DashboardPage()),
               (route) => false);
@@ -435,7 +443,7 @@ class _TaskPageState extends State<TaskPage> {
       var message = body['message'];
       if (checkin.statusCode == 200) {
         prefs.setInt('checkin_id', body['data']['id']);
-
+        startTime();
         Widget okButton = TextButton(
           child: Text("Tutup"),
           onPressed: () {
