@@ -83,6 +83,9 @@ class _FormPageState extends State<FormPage> {
                     ),
                     TextField(
                       textInputAction: TextInputAction.next,
+                      onSubmitted: (value) {
+                        _doLogin();
+                      },
                       controller: password,
                       obscureText: pass,
                       decoration: InputDecoration(

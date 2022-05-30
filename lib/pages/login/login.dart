@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:telkom_apps/pages/login/components/head.dart';
 import 'package:telkom_apps/pages/login/components/form.dart';
 import 'package:flutter/services.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({
     Key? key,
@@ -19,10 +20,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         body: SingleChildScrollView(
             child: Column(
-      children: <Widget>[
-        Head(),
-        FormPage()
-      ],
+      children: <Widget>[Head(), FormPage()],
     )));
   }
 }

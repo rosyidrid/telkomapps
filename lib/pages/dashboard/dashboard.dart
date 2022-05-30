@@ -36,6 +36,7 @@ class _DashboardPageState extends State<DashboardPage> {
       statusBarColor: Colors.transparent,
     ));
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: size.width,
         padding: EdgeInsets.fromLTRB(0, 60, 0, 0),
@@ -67,6 +68,11 @@ class _DashboardPageState extends State<DashboardPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     TextField(
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (value) {
+                        array = [];
+                        _search();
+                      },
                       controller: pjp,
                       decoration: InputDecoration(
                         icon: Icon(Icons.calendar_today),
@@ -90,6 +96,11 @@ class _DashboardPageState extends State<DashboardPage> {
                       endIndent: 12,
                     ),
                     TextField(
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (value) {
+                        array = [];
+                        _search();
+                      },
                       controller: nama_outlet,
                       decoration: InputDecoration(
                         icon: Icon(Icons.apartment),
@@ -149,7 +160,7 @@ class _DashboardPageState extends State<DashboardPage> {
               children: array,
             ),
           )),
-          SizedBox(height: 40)
+          SizedBox(height: 50)
         ]),
       ),
       floatingActionButton: FloatingActionButton.extended(
