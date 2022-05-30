@@ -103,7 +103,7 @@ class _TaskPageState extends State<TaskPage> with WidgetsBindingObserver {
     super.initState();
     NotificationAPI.init();
     check = false;
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     locationService.locationStream.listen((event) {
       setState(() {
         lat = event.latitude;
@@ -150,7 +150,7 @@ class _TaskPageState extends State<TaskPage> with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     timer?.cancel();
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     locationService.dispose();
     _controller.dispose();
   }
