@@ -96,6 +96,7 @@ class _TaskPageState extends State<TaskPage> {
   @override
   void initState() {
     super.initState();
+    startTime();
     checkin = false;
     checkout = false;
     locationService.locationStream.listen((event) {
@@ -129,7 +130,7 @@ class _TaskPageState extends State<TaskPage> {
         }
         print(totalDistance);
 
-        if (totalDistance > 20.0) {
+        if (totalDistance > 30.0) {
           setState(() {
             if (checkin == true) {
               checkRadius();
@@ -456,7 +457,7 @@ class _TaskPageState extends State<TaskPage> {
       var message = body['message'];
       if (checkin.statusCode == 200) {
         prefs.setInt('checkin_id', body['data']['id']);
-        startTime();
+
         Widget okButton = TextButton(
           child: Text("Tutup"),
           onPressed: () {
