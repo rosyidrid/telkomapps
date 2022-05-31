@@ -6,7 +6,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
-import 'package:telkom_apps/API/notification.dart';
 import 'package:telkom_apps/pages/dashboard/dashboard.dart';
 import 'package:telkom_apps/pages/photo/photo.dart';
 
@@ -64,7 +63,8 @@ class _TaskPageState extends State<TaskPage> {
   LocationService locationService = LocationService();
   var lat;
   var long;
-  bool check = false;
+  bool checkin = false;
+  bool checkout = false;
   static const maxSeconds = 59;
   static const maxMinute = 14;
   int seconds = maxSeconds;
@@ -87,7 +87,7 @@ class _TaskPageState extends State<TaskPage> {
       } else {
         setState(() {
           timer?.cancel();
-          _checkout();
+          checkout = true;
         });
       }
     });
@@ -96,8 +96,8 @@ class _TaskPageState extends State<TaskPage> {
   @override
   void initState() {
     super.initState();
-    NotificationAPI.init();
-    check = false;
+    checkin = false;
+    checkout = false;
     locationService.locationStream.listen((event) {
       setState(() {
         lat = event.latitude;
@@ -121,17 +121,17 @@ class _TaskPageState extends State<TaskPage> {
               _loc[i + 1].latitude, _loc[i + 1].longitude);
         }
 
-        if (check == false) {
+        if (checkin == false) {
           if (totalDistance < 20.0) {
-            checkin(lat, long, check);
-            check = true;
+            _checkin(lat, long, checkin);
+            checkin = true;
           }
         }
         print(totalDistance);
 
         if (totalDistance > 20.0) {
           setState(() {
-            if (check == true) {
+            if (checkin == true) {
               checkRadius();
             }
           });
@@ -259,7 +259,7 @@ class _TaskPageState extends State<TaskPage> {
                               builder: (context) => PhotoPage(id: 2)));
                     },
                     child: Text(
-                      "Ambil Foto Stok Digipos",
+                      "Ambil Foto Etalase",
                       style: TextStyle(
                         fontSize: 14,
                       ),
@@ -334,7 +334,29 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                   SizedBox(
                     height: 25,
-                  )
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (checkout == true) {
+                        _checkout();
+                      }
+                    },
+                    child: Text(
+                      "Checkout",
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(size.width * 0.8, 50),
+                        primary: checkout == true
+                            ? Color(0xFFFF4949)
+                            : Colors.grey[350],
+                        textStyle: TextStyle(fontWeight: FontWeight.w700)),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
                 ],
               ),
             ))
@@ -352,8 +374,6 @@ class _TaskPageState extends State<TaskPage> {
     };
 
     var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
-    var body = json.decode(check.body);
-    var message = body['message'];
     if (check.statusCode == 200) {
       prefs.remove('checkin_id');
     }
@@ -422,7 +442,7 @@ class _TaskPageState extends State<TaskPage> {
     }
   }
 
-  checkin(lat, long, check) async {
+  _checkin(lat, long, check) async {
     if (check == false) {
       final prefs = await SharedPreferences.getInstance();
       var token = prefs.get('token');
