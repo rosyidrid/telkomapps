@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:telkom_apps/API/api.dart';
 import 'package:telkom_apps/pages/dashboard/dashboard.dart';
 import 'package:telkom_apps/pages/login/login.dart';
 import 'package:flutter/services.dart';
@@ -18,17 +19,34 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   doLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.get('token');
-    prefs.remove('checkin_id');
-    prefs.remove('tombol_1');
-    prefs.remove('tombol_2');
-    prefs.remove('tombol_3');
-    prefs.remove('tombol_4');
-    prefs.remove('tombol_5');
+    var checkinId = prefs.get('checkin_id');
+    if (checkinId != null) {
+      resetData(checkinId);
+    }
     if (token != null) {
       return true;
     } else {
       prefs.clear();
       return false;
+    }
+  }
+
+  Future resetData(checkinId) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    var token = prefs.get('token');
+    var data = {
+      "checkin_id": checkinId,
+    };
+
+    var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
+    if (check.statusCode == 200) {
+      prefs.remove('checkin_id');
+      prefs.remove('tombol_1');
+      prefs.remove('tombol_2');
+      prefs.remove('tombol_3');
+      prefs.remove('tombol_4');
+      prefs.remove('tombol_5');
     }
   }
 
