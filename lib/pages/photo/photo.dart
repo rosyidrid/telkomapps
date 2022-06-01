@@ -45,9 +45,9 @@ class _PhotoPageState extends State<PhotoPage> {
                                   width: size.width * 0.3,
                                 ),
                                 Text(
-                                  "SALAH",
+                                  "BENAR",
                                   style: TextStyle(
-                                      color: Colors.red,
+                                      color: Colors.green,
                                       fontSize: 20,
                                       fontWeight: FontWeight.w300),
                                 ),
@@ -58,9 +58,9 @@ class _PhotoPageState extends State<PhotoPage> {
                                 Image.asset("assets/image/jpeg/foto_2.jpg",
                                     width: size.width * 0.3),
                                 Text(
-                                  "BENAR",
+                                  "SALAH",
                                   style: TextStyle(
-                                      color: Colors.green,
+                                      color: Colors.red,
                                       fontSize: 20,
                                       fontWeight: FontWeight.w300),
                                 ),
@@ -80,7 +80,9 @@ class _PhotoPageState extends State<PhotoPage> {
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16)),
                               Text(
-                                  "1. Posisi hp dimiringkan\n2. Wajah dan Outlet terlihat jelas",
+                                  "1. Posisi hp dalam keadalaan potrait/berdiri tegak\n" +
+                                      "2. Objek harus terlihat jelas\n" +
+                                      "3. Hindari Backlight/membelakangi cahaya",
                                   style: TextStyle(
                                       color: Colors.grey,
                                       fontWeight: FontWeight.w300,

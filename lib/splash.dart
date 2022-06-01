@@ -18,6 +18,12 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   doLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.get('token');
+    prefs.remove('checkin_id');
+    prefs.remove('tombol_1');
+    prefs.remove('tombol_2');
+    prefs.remove('tombol_3');
+    prefs.remove('tombol_4');
+    prefs.remove('tombol_5');
     if (token != null) {
       return true;
     } else {

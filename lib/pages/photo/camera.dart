@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
+import 'package:telkom_apps/pages/task/checkin_task.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key, required this.id}) : super(key: key);
@@ -201,6 +202,17 @@ class DisplayPictureScreen extends StatelessWidget {
     var body = json.decode(upload.body);
     var message = body['message'];
     if (upload.statusCode == 200) {
+      if (id == 1) {
+        prefs.setBool('tombol_1', true);
+      } else if (id == 2) {
+        prefs.setBool('tombol_2', true);
+      } else if (id == 3) {
+        prefs.setBool('tombol_3', true);
+      } else if (id == 4) {
+        prefs.setBool('tombol_4', true);
+      } else {
+        prefs.setBool('tombol_5', true);
+      }
       Widget okButton = TextButton(
         child: Text("Close"),
         onPressed: () {

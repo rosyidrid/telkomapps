@@ -63,13 +63,30 @@ class _TaskPageState extends State<TaskPage> {
   LocationService locationService = LocationService();
   var lat;
   var long;
-  bool checkin = false;
-  bool checkout = false;
+  var checkin = false;
+  var checkout = false;
+  var tombol_1;
+  var tombol_2;
+  var tombol_3;
+  var tombol_4;
+  var tombol_5;
   static const maxSeconds = 59;
   static const maxMinute = 14;
   int seconds = maxSeconds;
   int minute = maxMinute;
   Timer? timer;
+
+  void checkTombol() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      tombol_1 = prefs.get('tombol_1');
+      tombol_2 = prefs.get('tombol_2');
+      tombol_3 = prefs.get('tombol_3');
+      tombol_4 = prefs.get('tombol_4');
+      tombol_5 = prefs.get('tombol_5');
+    });
+  }
+
   void startTime() {
     timer = Timer.periodic(Duration(seconds: 1), (_) {
       if (seconds > 0) {
@@ -90,13 +107,13 @@ class _TaskPageState extends State<TaskPage> {
           checkout = true;
         });
       }
+      checkTombol();
     });
   }
 
   @override
   void initState() {
     super.initState();
-    startTime();
     checkin = false;
     checkout = false;
     locationService.locationStream.listen((event) {
@@ -128,7 +145,6 @@ class _TaskPageState extends State<TaskPage> {
             checkin = true;
           }
         }
-        print(totalDistance);
 
         if (totalDistance > 30.0) {
           setState(() {
@@ -233,10 +249,12 @@ class _TaskPageState extends State<TaskPage> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PhotoPage(id: 1)));
+                      if (tombol_1 != true) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PhotoPage(id: 1)));
+                      }
                     },
                     child: Text(
                       "Ambil Foto di Outlet",
@@ -246,18 +264,22 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: Color(0xFFFF4949),
+                        primary: tombol_1 != true
+                            ? Color(0xFFFF4949)
+                            : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PhotoPage(id: 2)));
+                    onPressed: () async {
+                      if (tombol_2 != true) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PhotoPage(id: 2)));
+                      }
                     },
                     child: Text(
                       "Ambil Foto Etalase",
@@ -267,18 +289,22 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: Color(0xFFFF4949),
+                        primary: tombol_2 != true
+                            ? Color(0xFFFF4949)
+                            : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PhotoPage(id: 3)));
+                    onPressed: () async {
+                      if (tombol_3 != true) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PhotoPage(id: 3)));
+                      }
                     },
                     child: Text(
                       "Ambil Foto Nota Penjualan",
@@ -288,18 +314,22 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: Color(0xFFFF4949),
+                        primary: tombol_3 != true
+                            ? Color(0xFFFF4949)
+                            : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PhotoPage(id: 4)));
+                    onPressed: () async {
+                      if (tombol_4 != true) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PhotoPage(id: 4)));
+                      }
                     },
                     child: Text(
                       "Ambil Foto Promo Comp",
@@ -309,18 +339,22 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: Color(0xFFFF4949),
+                        primary: tombol_4 != true
+                            ? Color(0xFFFF4949)
+                            : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PhotoPage(id: 5)));
+                    onPressed: () async {
+                      if (tombol_5 != true) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PhotoPage(id: 5)));
+                      }
                     },
                     child: Text(
                       "Ambil Foto Harga EUP",
@@ -330,7 +364,9 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: Color(0xFFFF4949),
+                        primary: tombol_5 != true
+                            ? Color(0xFFFF4949)
+                            : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
                   ),
                   SizedBox(
@@ -377,6 +413,11 @@ class _TaskPageState extends State<TaskPage> {
     var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
     if (check.statusCode == 200) {
       prefs.remove('checkin_id');
+      prefs.remove('tombol_1');
+      prefs.remove('tombol_2');
+      prefs.remove('tombol_3');
+      prefs.remove('tombol_4');
+      prefs.remove('tombol_5');
     }
   }
 
@@ -457,7 +498,7 @@ class _TaskPageState extends State<TaskPage> {
       var message = body['message'];
       if (checkin.statusCode == 200) {
         prefs.setInt('checkin_id', body['data']['id']);
-
+        startTime();
         Widget okButton = TextButton(
           child: Text("Tutup"),
           onPressed: () {
@@ -492,6 +533,11 @@ class _TaskPageState extends State<TaskPage> {
     var body = json.decode(checkout.body);
     var message = body['message'];
     if (checkout.statusCode == 200) {
+      prefs.remove('tombol_1');
+      prefs.remove('tombol_2');
+      prefs.remove('tombol_3');
+      prefs.remove('tombol_4');
+      prefs.remove('tombol_5');
       prefs.remove('checkin_id');
       Widget okButton = TextButton(
         child: Text("Back to Dashboard"),
