@@ -39,6 +39,8 @@ class LocationService {
       location.serviceEnabled().then((value) {
         location.requestPermission().then((value) {
           if (value == PermissionStatus.granted) {
+            location.changeSettings(
+                accuracy: LocationAccuracy.high, interval: 1000);
             location.onLocationChanged.listen((value) {
               if (value != null) {
                 if (!_locationController.isClosed) {
@@ -249,7 +251,7 @@ class _TaskPageState extends State<TaskPage> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: () {
-                      if (tombol_1 != true) {
+                      if (tombol_1 != true && checkin == true) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -264,7 +266,7 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: tombol_1 != true
+                        primary: tombol_1 != true && checkin == true
                             ? Color(0xFFFF4949)
                             : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
@@ -274,7 +276,7 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (tombol_2 != true) {
+                      if (tombol_2 != true && checkin == true) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -289,7 +291,7 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: tombol_2 != true
+                        primary: tombol_2 != true && checkin == true
                             ? Color(0xFFFF4949)
                             : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
@@ -299,7 +301,7 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (tombol_3 != true) {
+                      if (tombol_3 != true && checkin == true) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -314,7 +316,7 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: tombol_3 != true
+                        primary: tombol_3 != true && checkin == true
                             ? Color(0xFFFF4949)
                             : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
@@ -324,7 +326,7 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (tombol_4 != true) {
+                      if (tombol_4 != true && checkin == true) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -339,7 +341,7 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: tombol_4 != true
+                        primary: tombol_4 != true && checkin == true
                             ? Color(0xFFFF4949)
                             : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
@@ -349,7 +351,7 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (tombol_5 != true) {
+                      if (tombol_5 != true && checkin == true) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -364,7 +366,7 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: tombol_5 != true
+                        primary: tombol_5 != true && checkin == true
                             ? Color(0xFFFF4949)
                             : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),

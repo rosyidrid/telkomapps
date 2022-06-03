@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
-import 'package:telkom_apps/pages/task/checkin_task.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key, required this.id}) : super(key: key);

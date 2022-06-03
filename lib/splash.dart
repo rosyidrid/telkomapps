@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:telkom_apps/API/api.dart';
 import 'package:telkom_apps/pages/dashboard/dashboard.dart';
@@ -21,7 +19,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     var token = prefs.get('token');
     var checkinId = prefs.get('checkin_id');
     if (checkinId != null) {
-      resetData(checkinId);
+      resetData(checkinId, token);
     }
     if (token != null) {
       return true;
@@ -31,10 +29,9 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     }
   }
 
-  Future resetData(checkinId) async {
+  Future resetData(checkinId, token) async {
     final prefs = await SharedPreferences.getInstance();
 
-    var token = prefs.get('token');
     var data = {
       "checkin_id": checkinId,
     };
