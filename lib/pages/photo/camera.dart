@@ -178,39 +178,33 @@ class DisplayPictureScreen extends StatelessWidget {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.get('token');
     var checkinId = prefs.get('checkin_id');
-    var url;
-    var photo;
-    if (id == 1) {
-      url = 'checkin/photo/selfie';
-      photo = 'selfie';
-    } else if (id == 2) {
-      url = 'checkin/photo/stock';
-      photo = 'stock';
-    } else if (id == 3) {
-      url = 'checkin/photo/nota';
-      photo = 'nota';
-    } else if (id == 4) {
-      url = 'checkin/photo/promo';
-      photo = 'promo';
-    } else {
-      url = 'checkin/photo/eup';
-      photo = 'harga_eup';
-    }
-    var data = {'checkin_id': checkinId, 'photo_' + photo: imagePath};
-    var upload = await CallAPI().upload(token, url, data, photo);
+    var foto = ['selfie', 'stock', 'nota', 'promo', 'harga_eup', 'bukti'];
+
+    var url = [
+      'checkin/photo/selfie',
+      'checkin/photo/stock',
+      'checkin/photo/nota',
+      'checkin/photo/promo',
+      'checkin/photo/eup'
+      'checkin/tutup'
+    ];
+    var data = {'checkin_id': checkinId, 'photo_' + foto[id]: imagePath};
+    var upload = await CallAPI().upload(token, url[id], data, foto[id]);
     var body = json.decode(upload.body);
     var message = body['message'];
     if (upload.statusCode == 200) {
-      if (id == 1) {
+      if (id == 0) {
+        prefs.setBool('tombol_0', true);
+      } else if (id == 1) {
         prefs.setBool('tombol_1', true);
       } else if (id == 2) {
         prefs.setBool('tombol_2', true);
       } else if (id == 3) {
         prefs.setBool('tombol_3', true);
       } else if (id == 4) {
-        prefs.setBool('tombol_4', true);
-      } else {
         prefs.setBool('tombol_5', true);
+      } else {
+        prefs.setBool('tutup', true);
       }
       Widget okButton = TextButton(
         child: Text("Close"),

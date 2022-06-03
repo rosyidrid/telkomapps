@@ -39,11 +39,12 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
     if (check.statusCode == 200) {
       prefs.remove('checkin_id');
+      prefs.remove('tombol_0');
       prefs.remove('tombol_1');
       prefs.remove('tombol_2');
       prefs.remove('tombol_3');
       prefs.remove('tombol_4');
-      prefs.remove('tombol_5');
+      prefs.remove('tutup');
     }
   }
 

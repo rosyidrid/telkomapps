@@ -40,7 +40,7 @@ class LocationService {
         location.requestPermission().then((value) {
           if (value == PermissionStatus.granted) {
             location.changeSettings(
-                accuracy: LocationAccuracy.high, interval: 1000);
+                accuracy: LocationAccuracy.high, interval: 5000);
             location.onLocationChanged.listen((value) {
               if (value != null) {
                 if (!_locationController.isClosed) {
@@ -67,11 +67,13 @@ class _TaskPageState extends State<TaskPage> {
   var long;
   var checkin = false;
   var checkout = false;
-  var tombol_1;
-  var tombol_2;
-  var tombol_3;
-  var tombol_4;
-  var tombol_5;
+  var tombol_0 = false;
+  var tombol_1 = false;
+  var tombol_2 = false;
+  var tombol_3 = false;
+  var tombol_4 = false;
+  var tombol = [];
+  var tutup;
   static const maxSeconds = 59;
   static const maxMinute = 14;
   int seconds = maxSeconds;
@@ -81,11 +83,13 @@ class _TaskPageState extends State<TaskPage> {
   void checkTombol() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      tombol_1 = prefs.get('tombol_1');
-      tombol_2 = prefs.get('tombol_2');
-      tombol_3 = prefs.get('tombol_3');
-      tombol_4 = prefs.get('tombol_4');
-      tombol_5 = prefs.get('tombol_5');
+      tombol_0 = prefs.get('tombol_0').toString() == 'true' ? true : false;
+      tombol_1 = prefs.get('tombol_1').toString() == 'true' ? true : false;
+      tombol_2 = prefs.get('tombol_2').toString() == 'true' ? true : false;
+      tombol_3 = prefs.get('tombol_3').toString() == 'true' ? true : false;
+      tombol_4 = prefs.get('tombol_4').toString() == 'true' ? true : false;
+      tutup = prefs.get('tutup');
+      tombol = [tombol_0, tombol_1, tombol_2, tombol_3, tombol_4];
     });
   }
 
@@ -148,11 +152,17 @@ class _TaskPageState extends State<TaskPage> {
           }
         }
 
-        if (totalDistance > 30.0) {
+        if (totalDistance > 40.0) {
           setState(() {
             if (checkin == true) {
               checkRadius();
             }
+          });
+        }
+        if (tutup == true) {
+          setState(() {
+            seconds = 0;
+            minute = 0;
           });
         }
       });
@@ -227,7 +237,7 @@ class _TaskPageState extends State<TaskPage> {
                     Circle(
                         circleId: CircleId('Outlet'),
                         center: LatLng(widget.latitude, widget.longitude),
-                        radius: 20,
+                        radius: checkin == true ? 40 : 20,
                         fillColor: Color.fromARGB(82, 138, 138, 138),
                         strokeColor: Colors.red,
                         strokeWidth: 1)
@@ -251,11 +261,13 @@ class _TaskPageState extends State<TaskPage> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: () {
-                      if (tombol_1 != true && checkin == true) {
+                      if (tombol_0 != true &&
+                          checkin == true &&
+                          tutup != true) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PhotoPage(id: 1)));
+                                builder: (context) => PhotoPage(id: 0)));
                       }
                     },
                     child: Text(
@@ -266,7 +278,9 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: tombol_1 != true && checkin == true
+                        primary: tombol_0 == false &&
+                                checkin == true &&
+                                tutup != true
                             ? Color(0xFFFF4949)
                             : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
@@ -276,11 +290,13 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (tombol_2 != true && checkin == true) {
+                      if (tombol_1 != true &&
+                          checkin == true &&
+                          tutup != true) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PhotoPage(id: 2)));
+                                builder: (context) => PhotoPage(id: 1)));
                       }
                     },
                     child: Text(
@@ -291,7 +307,9 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: tombol_2 != true && checkin == true
+                        primary: tombol_1 == false &&
+                                checkin == true &&
+                                tutup != true
                             ? Color(0xFFFF4949)
                             : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
@@ -301,11 +319,13 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (tombol_3 != true && checkin == true) {
+                      if (tombol_2 != true &&
+                          checkin == true &&
+                          tutup != true) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PhotoPage(id: 3)));
+                                builder: (context) => PhotoPage(id: 2)));
                       }
                     },
                     child: Text(
@@ -316,7 +336,9 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: tombol_3 != true && checkin == true
+                        primary: tombol_2 == false &&
+                                checkin == true &&
+                                tutup != true
                             ? Color(0xFFFF4949)
                             : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
@@ -326,11 +348,13 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (tombol_4 != true && checkin == true) {
+                      if (tombol_3 != true &&
+                          checkin == true &&
+                          tutup != true) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PhotoPage(id: 4)));
+                                builder: (context) => PhotoPage(id: 3)));
                       }
                     },
                     child: Text(
@@ -341,7 +365,9 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: tombol_4 != true && checkin == true
+                        primary: tombol_3 == false &&
+                                checkin == true &&
+                                tutup != true
                             ? Color(0xFFFF4949)
                             : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
@@ -351,11 +377,13 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (tombol_5 != true && checkin == true) {
+                      if (tombol_4 != true &&
+                          checkin == true &&
+                          tutup != true) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PhotoPage(id: 5)));
+                                builder: (context) => PhotoPage(id: 4)));
                       }
                     },
                     child: Text(
@@ -366,7 +394,36 @@ class _TaskPageState extends State<TaskPage> {
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
-                        primary: tombol_5 != true && checkin == true
+                        primary: tombol_4 == false &&
+                                checkin == true &&
+                                tutup != true
+                            ? Color(0xFFFF4949)
+                            : Colors.grey[350],
+                        textStyle: TextStyle(fontWeight: FontWeight.w700)),
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (checkout != true &&
+                          checkin == true && !tombol.contains(true)) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PhotoPage(id: 5)));
+                      }
+                    },
+                    child: Text(
+                      "Outlet Tutup",
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(size.width * 0.8, 50),
+                        primary: tutup != true &&
+                                checkin == true && !tombol.contains(true)
                             ? Color(0xFFFF4949)
                             : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
@@ -415,11 +472,12 @@ class _TaskPageState extends State<TaskPage> {
     var check = await CallAPI().checkRadius(token, 'checkin/out-radius', data);
     if (check.statusCode == 200) {
       prefs.remove('checkin_id');
+      prefs.remove('tombol_0');
       prefs.remove('tombol_1');
       prefs.remove('tombol_2');
       prefs.remove('tombol_3');
       prefs.remove('tombol_4');
-      prefs.remove('tombol_5');
+      prefs.remove('tutup');
     }
   }
 
@@ -535,12 +593,13 @@ class _TaskPageState extends State<TaskPage> {
     var body = json.decode(checkout.body);
     var message = body['message'];
     if (checkout.statusCode == 200) {
+      prefs.remove('tombol_0');
       prefs.remove('tombol_1');
       prefs.remove('tombol_2');
       prefs.remove('tombol_3');
       prefs.remove('tombol_4');
-      prefs.remove('tombol_5');
       prefs.remove('checkin_id');
+      prefs.remove('tutup');
       Widget okButton = TextButton(
         child: Text("Back to Dashboard"),
         onPressed: () {
