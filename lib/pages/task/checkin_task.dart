@@ -406,7 +406,7 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (checkout != true &&
+                      if (tutup != true &&
                           checkin == true && !tombol.contains(true)) {
                         Navigator.push(
                             context,

@@ -178,14 +178,14 @@ class DisplayPictureScreen extends StatelessWidget {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.get('token');
     var checkinId = prefs.get('checkin_id');
-    var foto = ['selfie', 'stock', 'nota', 'promo', 'harga_eup', 'bukti'];
+    var foto = ['selfie', 'stock', 'nota', 'promo', 'harga_eup', 'selfie'];
 
     var url = [
       'checkin/photo/selfie',
       'checkin/photo/stock',
       'checkin/photo/nota',
       'checkin/photo/promo',
-      'checkin/photo/eup'
+      'checkin/photo/eup',
       'checkin/tutup'
     ];
     var data = {'checkin_id': checkinId, 'photo_' + foto[id]: imagePath};
