@@ -67,11 +67,11 @@ class _TaskPageState extends State<TaskPage> {
   var long;
   var checkin = false;
   var checkout = false;
-  var tombol_0 = false;
-  var tombol_1 = false;
-  var tombol_2 = false;
-  var tombol_3 = false;
-  var tombol_4 = false;
+  var tombol_0;
+  var tombol_1;
+  var tombol_2;
+  var tombol_3;
+  var tombol_4;
   var tombol = [];
   var tutup;
   static const maxSeconds = 59;
