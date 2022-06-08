@@ -122,13 +122,23 @@ class _CameraPageState extends State<CameraPage> {
 }
 
 // A widget that displays the picture taken by the user.
-class DisplayPictureScreen extends StatelessWidget {
-  final String imagePath;
-  final int id;
-
+class DisplayPictureScreen extends StatefulWidget {
   const DisplayPictureScreen(
-      {Key? key, required this.imagePath, required this.id})
+      {Key? key, required this.id, required this.imagePath})
       : super(key: key);
+  final int id;
+  final String imagePath;
+  @override
+  State<DisplayPictureScreen> createState() => _DisplayPictureScreen();
+}
+
+class _DisplayPictureScreen extends State<DisplayPictureScreen> {
+  bool status = false;
+  @override
+  void initState() {
+    super.initState();
+    status = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +154,7 @@ class DisplayPictureScreen extends StatelessWidget {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Image.file(File(imagePath), height: size.height * .6),
+                Image.file(File(widget.imagePath), height: size.height * .6),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -160,11 +170,18 @@ class DisplayPictureScreen extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        _upload(context);
+                        if (status == false) {
+                          _upload(context);
+                          setState(() {
+                            status = true;
+                          });
+                        }
                       },
                       child: Text("Upload Foto"),
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFFFF4949),
+                        primary: status == false
+                            ? Color(0xFFFF4949)
+                            : Colors.grey[350],
                         minimumSize: Size(size.width * 0.2, 40),
                       ),
                     )
@@ -188,26 +205,30 @@ class DisplayPictureScreen extends StatelessWidget {
       'checkin/photo/eup',
       'checkin/tutup'
     ];
-    var data = {'checkin_id': checkinId, 'photo_' + foto[id]: imagePath};
-    var upload = await CallAPI().upload(token, url[id], data, foto[id]);
+    var data = {
+      'checkin_id': checkinId,
+      'photo_' + foto[widget.id]: widget.imagePath
+    };
+    var upload =
+        await CallAPI().upload(token, url[widget.id], data, foto[widget.id]);
     var body = json.decode(upload.body);
     var message = body['message'];
     if (upload.statusCode == 200) {
-      if (id == 0) {
+      if (widget.id == 0) {
         prefs.setBool('tombol_0', true);
-      } else if (id == 1) {
+      } else if (widget.id == 1) {
         prefs.setBool('tombol_1', true);
-      } else if (id == 2) {
+      } else if (widget.id == 2) {
         prefs.setBool('tombol_2', true);
-      } else if (id == 3) {
+      } else if (widget.id == 3) {
         prefs.setBool('tombol_3', true);
-      } else if (id == 4) {
+      } else if (widget.id == 4) {
         prefs.setBool('tombol_5', true);
       } else {
         prefs.setBool('tutup', true);
       }
       Widget okButton = TextButton(
-        child: Text("Close"),
+        child: Text("Back to Task"),
         onPressed: () {
           Navigator.pop(context);
           Navigator.pop(context);
@@ -250,6 +271,9 @@ class DisplayPictureScreen extends StatelessWidget {
           builder: (BuildContext context) {
             return alert;
           });
+      setState(() {
+        status = false;
+      });
     }
   }
 }
