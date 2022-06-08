@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telkom_apps/API/api.dart';
 import 'package:telkom_apps/pages/dashboard/components/user.dart';
@@ -27,7 +26,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   void initState() {
-    _getData();
     super.initState();
   }
 
@@ -118,7 +116,6 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        array = [];
                         _search();
                         FocusScope.of(context).unfocus();
                       },
@@ -139,77 +136,20 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ],
           ),
-          FutureBuilder(
-              future: _search(),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    heightFactor: 5,
-                    child: CircularProgressIndicator(color: Color(0xFFFF4949)),
-                  );
-                }
-                for (var i = 0; i < snapshot.data.length; i++) {
-                  var content = Container(
-                    width: MediaQuery.of(context).size.width * .8,
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    OutletPage(outlet: snapshot.data[i])));
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                              "${snapshot.data[i]['outlet_id']} - ${snapshot.data[i]['namaoutlet']}",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              )),
-                          Row(
-                            children: <Widget>[
-                              Icon(Icons.location_on,
-                                  color: Colors.grey, size: 14),
-                              Text(" ${snapshot.data[i]['kota']}",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                  )),
-                            ],
-                          )
-                        ],
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          minimumSize:
-                              Size(MediaQuery.of(context).size.width, 100)),
-                    ),
-                  );
-                  array.add(content);
-                }
-                if (snapshot.data.length == 0) {
-                  return Container(
-                    margin: EdgeInsets.only(top: 40),
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.search_off, color: Colors.grey, size: 60),
-                        Text(
-                          "Tidak ada data",
-                        )
-                      ],
-                    ),
-                  );
-                } else {
-                  return Text(
-                    "Hasil Pencarian : ",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                  );
-                }
-              }),
+          filterData.length == 0
+              ? Container(
+                  margin: EdgeInsets.only(top: 40),
+                  child: Column(
+                    children: <Widget>[
+                      Icon(Icons.search_off, color: Colors.grey, size: 60),
+                      Text(
+                        "Tidak ada data",
+                      )
+                    ],
+                  ),
+                )
+              : Text("Hasil Pencarian : ",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           Expanded(
               child: Container(
             width: size.width * .8,
@@ -275,22 +215,17 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
-  _getData() async {
+  _search() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.get('token');
     var url = 'detail-data/';
     var search = await CallAPI().getDataOutletPJP(token, url);
     var body = json.decode(search.body);
     data = [];
+    array = [];
     for (var i in body['data']) {
       data.add(i);
     }
-  }
-
-  _search() async {
-    setState(() {
-      array = [];
-    });
     if (pjp.text != "") {
       filterData = data
           .where(
@@ -308,6 +243,48 @@ class _DashboardPageState extends State<DashboardPage> {
             .toList();
       }
     }
-    return filterData;
+
+    setState(() {
+      for (var i = 0; i < filterData.length; i++) {
+        var content = Container(
+          width: MediaQuery.of(context).size.width * .8,
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OutletPage(outlet: filterData[i])));
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                    "${filterData[i]['outlet_id']} - ${filterData[i]['namaoutlet']}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    )),
+                Row(
+                  children: <Widget>[
+                    Icon(Icons.location_on, color: Colors.grey, size: 14),
+                    Text(" ${filterData[i]['kota']}",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        )),
+                  ],
+                )
+              ],
+            ),
+            style: ElevatedButton.styleFrom(
+                primary: Colors.white,
+                minimumSize: Size(MediaQuery.of(context).size.width, 100)),
+          ),
+        );
+        array.add(content);
+      }
+    });
   }
 }
