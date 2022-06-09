@@ -160,11 +160,18 @@ class _DisplayPictureScreen extends State<DisplayPictureScreen> {
                   children: <Widget>[
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context, false);
+                        if (status == false) {
+                          Navigator.pop(context, false);
+                          setState(() {
+                            status = true;
+                          });
+                        }
                       },
                       child: Text("Ambil Ulang"),
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFFFF4949),
+                        primary: status == false
+                            ? Color(0xFFFF4949)
+                            : Colors.grey[350],
                         minimumSize: Size(size.width * 0.2, 40),
                       ),
                     ),
@@ -223,7 +230,7 @@ class _DisplayPictureScreen extends State<DisplayPictureScreen> {
       } else if (widget.id == 3) {
         prefs.setBool('tombol_3', true);
       } else if (widget.id == 4) {
-        prefs.setBool('tombol_5', true);
+        prefs.setBool('tombol_4', true);
       } else {
         prefs.setBool('tutup', true);
       }
