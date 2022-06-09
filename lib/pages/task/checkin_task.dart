@@ -329,7 +329,7 @@ class _TaskPageState extends State<TaskPage> {
                       }
                     },
                     child: Text(
-                      "Ambil Foto Nota Penjualan",
+                      "Ambil Foto Promo Telkomsel",
                       style: TextStyle(
                         fontSize: 14,
                       ),
