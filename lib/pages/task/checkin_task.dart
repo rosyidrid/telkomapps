@@ -40,7 +40,7 @@ class LocationService {
         location.requestPermission().then((value) {
           if (value == PermissionStatus.granted) {
             location.changeSettings(
-                accuracy: LocationAccuracy.high, interval: 5000);
+                accuracy: LocationAccuracy.high, interval: 1000);
             location.onLocationChanged.listen((value) {
               if (value != null) {
                 if (!_locationController.isClosed) {
