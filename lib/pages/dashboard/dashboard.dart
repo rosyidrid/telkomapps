@@ -262,7 +262,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 Text(
                     "${filterData[i]['outlet_id']} - ${filterData[i]['namaoutlet']}",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: filterData[i]['isCheckin'] == true
+                          ? Colors.green
+                          : Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     )),

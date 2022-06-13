@@ -67,6 +67,7 @@ class _TaskPageState extends State<TaskPage> {
   var long;
   var checkin = false;
   var checkout = false;
+  var e = false;
   var tombol_0;
   var tombol_1;
   var tombol_2;
@@ -114,7 +115,31 @@ class _TaskPageState extends State<TaskPage> {
         });
       }
       checkTombol();
+      checkService();
     });
+  }
+
+  void checkService() {
+    if (e == false) {
+      locationService.location.serviceEnabled().then((value) {
+        if (value != true) {
+          setState(() {
+            e = true;
+          });
+          locationService.location.requestService().then((value) {
+            if (value == true) {
+              setState(() {
+                e = false;
+              });
+            } else {
+              setState(() {
+                e = false;
+              });
+            }
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -136,7 +161,6 @@ class _TaskPageState extends State<TaskPage> {
           ),
           position: LatLng(lat, long),
         ));
-
         _loc.add(LatLng(lat, long));
         _loc.add(LatLng(widget.latitude, widget.longitude));
 
@@ -152,7 +176,7 @@ class _TaskPageState extends State<TaskPage> {
           }
         }
 
-        if (totalDistance > 40.0) {
+        if (totalDistance > 50.0) {
           setState(() {
             if (checkin == true) {
               checkRadius();
@@ -407,7 +431,8 @@ class _TaskPageState extends State<TaskPage> {
                   ElevatedButton(
                     onPressed: () async {
                       if (tutup != true &&
-                          checkin == true && !tombol.contains(true)) {
+                          checkin == true &&
+                          !tombol.contains(true)) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -423,7 +448,8 @@ class _TaskPageState extends State<TaskPage> {
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(size.width * 0.8, 50),
                         primary: tutup != true &&
-                                checkin == true && !tombol.contains(true)
+                                checkin == true &&
+                                !tombol.contains(true)
                             ? Color(0xFFFF4949)
                             : Colors.grey[350],
                         textStyle: TextStyle(fontWeight: FontWeight.w700)),
