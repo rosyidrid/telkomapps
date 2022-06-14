@@ -542,11 +542,11 @@ class _TaskPageState extends State<TaskPage> {
     var message = body['message'];
     if (check.statusCode == 200) {
       prefs.remove('checkin_id');
+      locationService.dispose();
       Widget okButton = TextButton(
         child: Text("Kembali ke Dashboard"),
         onPressed: () {
           timer?.cancel();
-          locationService.dispose();
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => DashboardPage()),
               (route) => false);

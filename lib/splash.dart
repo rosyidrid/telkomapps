@@ -18,10 +18,10 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.get('token');
     var checkinId = prefs.get('checkin_id');
-    if (checkinId != null) {
-      resetData(checkinId, token);
-    }
     if (token != null) {
+      if (checkinId != null) {
+        resetData(checkinId, token);
+      }
       return true;
     } else {
       prefs.clear();
