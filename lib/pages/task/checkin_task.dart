@@ -176,7 +176,7 @@ class _TaskPageState extends State<TaskPage> {
           }
         }
 
-        if (totalDistance > 75.0) {
+        if (totalDistance > 100.0) {
           setState(() {
             if (checkin == true) {
               checkRadius();
@@ -261,7 +261,7 @@ class _TaskPageState extends State<TaskPage> {
                     Circle(
                         circleId: CircleId('Outlet'),
                         center: LatLng(widget.latitude, widget.longitude),
-                        radius: checkin == true ? 75 : 20,
+                        radius: checkin == true ? 100 : 20,
                         fillColor: Color.fromARGB(82, 138, 138, 138),
                         strokeColor: Colors.red,
                         strokeWidth: 1)
