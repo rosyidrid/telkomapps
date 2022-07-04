@@ -585,6 +585,9 @@ class _TaskPageState extends State<TaskPage> {
       if (checkin.statusCode == 200) {
         prefs.setInt('checkin_id', body['data']['id']);
         startTime();
+        setState(() {
+          checkin = true;
+        });
         Widget okButton = TextButton(
           child: Text("Tutup"),
           onPressed: () {
